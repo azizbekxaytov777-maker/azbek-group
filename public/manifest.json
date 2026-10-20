@@ -1,38 +1,54 @@
 {
+  "id": "/",
   "name": "AZBEK GROUP — Universal Biznes Boshqaruv Super Ilovasi",
   "short_name": "AZBEK GROUP",
   "description": "AZBEK GROUP korxonalar ekotizimi uchun yagona bulutli biznes boshqaruv super-ilovasi",
-  "start_url": "./index.html",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "window-controls-overlay",
+    "minimal-ui"
+  ],
   "orientation": "any",
   "background_color": "#070A10",
   "theme_color": "#D4AF37",
-  "scope": "./",
   "lang": "uz",
-  "categories": ["business", "finance", "productivity"],
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
+  ],
   "icons": [
     {
-      "src": "./assets/azbek_icon_512.png?v=5.0",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./assets/azbek_icon_192.png?v=5.0",
+      "src": "/assets/azbek_icon_192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "./assets/icon.png?v=5.0",
+      "src": "/assets/azbek_icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/azbek_icon_512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/icon.svg?v=5.0",
-      "sizes": "512x512 192x192",
-      "type": "image/svg+xml",
+      "src": "/assets/azbek_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any"
     }
   ],
@@ -41,29 +57,49 @@
       "name": "Kassa / POS",
       "short_name": "Kassa",
       "description": "Skaner va tezkor to'lov",
-      "url": "./index.html#kassa",
-      "icons": [{ "src": "./assets/icon.png?v=5.0", "sizes": "96x96" }]
+      "url": "/#kassa",
+      "icons": [
+        {
+          "src": "/assets/azbek_icon_192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Restoran & Kafe",
       "short_name": "Restoran",
       "description": "Stollar va buyurtmalar",
-      "url": "./index.html#restaurant",
-      "icons": [{ "src": "./assets/icon.png?v=5.0", "sizes": "96x96" }]
+      "url": "/#restaurant",
+      "icons": [
+        {
+          "src": "/assets/azbek_icon_192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "name": "Xizmatlar & Moyka",
-      "short_name": "Xizmatlar",
+      "name": "Xizmatlar & Ustaxona",
+      "short_name": "Ustaxona",
       "description": "Avtoyuvish va ustaxona",
-      "url": "./index.html#services",
-      "icons": [{ "src": "./assets/icon.png?v=5.0", "sizes": "96x96" }]
+      "url": "/#services",
+      "icons": [
+        {
+          "src": "/assets/azbek_icon_192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Asoschi HQ",
       "short_name": "Asoschi",
       "description": "Barcha mijozlar va litsenziyalar boshqaruvi",
-      "url": "./index.html#admin",
-      "icons": [{ "src": "./assets/icon.svg", "sizes": "96x96" }]
+      "url": "/#admin",
+      "icons": [
+        {
+          "src": "/assets/azbek_icon_192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
   "prefer_related_applications": false

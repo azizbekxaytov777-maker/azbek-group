@@ -6,18 +6,18 @@
     <title>AZBEK GROUP — Universal Biznes Boshqaruv Super-Ilovasi</title>
     
     <!-- PWA & Mobile Meta Tags -->
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#070A10">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="AZBEK GROUP">
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/azbek_icon_512.png?v=5.0">
-    <link rel="icon" type="image/png" sizes="512x512" href="./assets/azbek_icon_512.png?v=5.0">
-    <link rel="icon" type="image/png" sizes="192x192" href="./assets/azbek_icon_192.png?v=5.0">
-    <link rel="icon" type="image/svg+xml" href="./assets/icon.svg?v=5.0">
-    <link rel="icon" type="image/x-icon" href="./favicon.ico?v=5.0">
-    <link rel="shortcut icon" href="./favicon.ico?v=5.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/azbek_icon_192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/azbek_icon_512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/azbek_icon_192.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -52,14 +52,32 @@
     <script src="./assets/qrcode.min.js"></script>
     <script src="./assets/html5-qrcode.min.js"></script>
 
-    <!-- PWA Native Install Prompt Capture -->
+    <!-- PWA Native Install Prompt Capture & SW Registration -->
     <script>
         window.deferredInstallPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             window.deferredInstallPrompt = e;
             console.log('✅ [AZBEK PWA] Native install prompt tayyor!');
+            const btn = document.getElementById('btnPwaInstall');
+            if (btn) {
+                btn.classList.add('animate-pulse');
+                btn.title = "Ilovani o'rnatishga tayyor (Bosing)";
+            }
         });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('🎉 [AZBEK PWA] Ilova muvaffaqiyatli o\'rnatildi!');
+            window.deferredInstallPrompt = null;
+            const btn = document.getElementById('btnPwaInstall');
+            if (btn) btn.innerHTML = '<span>✅</span> <span>O\'rnatilgan</span>';
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                .then(reg => console.log('✅ [AZBEK PWA] SW faol!', reg.scope))
+                .catch(err => console.warn('⚠️ [AZBEK PWA] SW xatolik:', err));
+        }
     </script>
 
     <style>
@@ -2256,64 +2274,120 @@
     <!-- MODAL 14: APP INSTALL & DOWNLOAD GUIDE (MOBILE & PC) -->
     <!-- ==================================================== -->
     <div id="appDownloadModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-obsidian-900 border border-gold-500/50 rounded-3xl p-5 sm:p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-4">
+        <div class="bg-obsidian-900 border border-gold-500/60 rounded-3xl p-4 sm:p-6 max-w-lg w-full max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
+            <!-- Modal Header -->
             <div class="flex justify-between items-center pb-3 border-b border-obsidian-800">
                 <div class="flex items-center gap-2.5">
-                    <span class="text-2xl">📲</span>
+                    <span class="text-2xl animate-pulse">📲</span>
                     <div>
-                        <h3 class="text-sm sm:text-base font-black text-white">AZBEK — Ilovani O'rnatish & Skachat Qilish</h3>
-                        <p class="text-[11px] text-slate-400">Kompyuter yoki telefoningizga 1 soniyada o'rnating</p>
+                        <h3 class="text-sm sm:text-base font-black text-white">AZBEK GROUP — Ilovani Telefonga O'rnatish</h3>
+                        <p class="text-[11px] text-slate-400">Bosh ekranga xuddi Play Market dasturi kabi o'rnating</p>
                     </div>
                 </div>
-                <button onclick="closeAppDownloadModal()" class="w-8 h-8 rounded-full bg-obsidian-800 text-slate-400 hover:text-white flex items-center justify-center text-xs font-bold">✕</button>
+                <button onclick="closeAppDownloadModal()" class="w-8 h-8 rounded-full bg-obsidian-800 text-slate-400 hover:text-white flex items-center justify-center text-xs font-bold transition">✕</button>
             </div>
 
-            <div class="space-y-4 text-xs">
-                <!-- 1. Kompyuter Holati (Windows) -->
-                <div class="bg-obsidian-850 border border-emerald-500/30 rounded-2xl p-4 space-y-2">
-                    <div class="flex items-center gap-2 text-emerald-400 font-extrabold text-sm">
-                        <span>💻</span> <span>1. Kompyuterda Ishga Tushirish (Windows)</span>
+            <div class="space-y-3.5 text-xs">
+                <!-- 1. ANDROID TELEFONLAR UCHUN (Samsung, Xiaomi, Redmi, Vivo, Oppo) -->
+                <div id="pwaAndroidSection" class="bg-gradient-to-br from-emerald-950/60 via-obsidian-900 to-obsidian-950 border-2 border-emerald-500/80 rounded-2xl p-4 space-y-3 shadow-lg shadow-emerald-500/10">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-emerald-400 font-black text-sm">
+                            <span class="text-xl">📱</span>
+                            <span>1. Android Telefonga O'rnatish (1 soniyada)</span>
+                        </div>
+                        <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 font-black text-[10px] rounded-full border border-emerald-500/40 uppercase">
+                            Eng Oson Usul
+                        </span>
                     </div>
-                    <p class="text-slate-300 leading-relaxed">
-                        Ilova ushbu kompyuterga <b>allaqachon o'rnatilgan</b>!
+
+                    <p class="text-slate-200 text-xs leading-relaxed">
+                        Ilova telefoningizga tushishi uchun brauzeringiz orqali quyidagi 3 qadamni bajaring:
                     </p>
-                    <div class="bg-obsidian-900 border border-obsidian-750 p-2.5 rounded-xl space-y-1.5 text-slate-300 text-[11px]">
-                        <p>• <b>1-usul:</b> Brauzerning eng yuqori manzil qatorida turgan <span class="bg-gold-500/20 text-gold-400 font-bold px-1.5 py-0.5 rounded border border-gold-500/30">«O'rnatish» (Install)</span> tugmasini bosing!</p>
-                        <p>• <b>2-usul:</b> Ish stolingizdagi rasmiy oltin logoli <span class="text-white font-bold">«AZBEK GROUP»</span> yorlig'ini bosing.</p>
+
+                    <div class="space-y-2 bg-obsidian-950/90 p-3 rounded-xl border border-obsidian-800 text-xs">
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-gold-500 text-obsidian-950 font-black flex items-center justify-center shrink-0 text-[11px] shadow mt-0.5">1</span>
+                            <div class="text-slate-200">
+                                <span>Brauzerning eng yuqori o'ng burchagidagi</span>
+                                <span class="inline-flex items-center justify-center px-1.5 py-0.5 bg-obsidian-800 text-gold-400 font-black rounded border border-gold-500/50 mx-1 text-xs">⋮</span>
+                                <span class="text-gold-400 font-bold">(3 ta nuqta)</span>
+                                <span>belgisini bosing.</span>
+                                <p class="text-[10px] text-slate-400 mt-0.5">(Manzil qatori o'ng tomonida turibdi)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-gold-500 text-obsidian-950 font-black flex items-center justify-center shrink-0 text-[11px] shadow mt-0.5">2</span>
+                            <div class="text-slate-200">
+                                <span>Menyudan</span>
+                                <span class="inline-block bg-emerald-500/25 text-emerald-300 font-black px-1.5 py-0.5 rounded border border-emerald-500/40 mx-1">«Установить приложение»</span>
+                                <span class="text-slate-300">(yoki «Добавить на главный экран»)</span>
+                                <span>bandini bosing.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-gold-500 text-obsidian-950 font-black flex items-center justify-center shrink-0 text-[11px] shadow mt-0.5">3</span>
+                            <div class="text-slate-200">
+                                <span>Chiqadigan oynada</span>
+                                <span class="text-emerald-400 font-black">«Установить»</span>
+                                <span>tugmasini bosing — ilova darhol telefoningiz bosh ekranida paydo bo'ladi!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Direct trigger button -->
+                    <button onclick="triggerPwaPromptFromModal()" class="w-full py-2.5 bg-gradient-to-r from-gold-500 via-amber-500 to-yellow-400 hover:from-gold-400 hover:to-amber-300 text-obsidian-950 font-black text-xs rounded-xl shadow-lg shadow-gold-500/25 flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer">
+                        <span>⚡</span> <span>Avtomatik Ruxsat Oynasini Chiqarish</span>
+                    </button>
+                </div>
+
+                <!-- 2. iPHONE / iPAD (iOS Safari) UCHUN -->
+                <div id="pwaIosSection" class="bg-obsidian-850 border border-blue-500/40 rounded-2xl p-3.5 space-y-2">
+                    <div class="flex items-center gap-2 text-blue-400 font-extrabold text-xs sm:text-sm">
+                        <span>🍏</span> <span>2. iPhone / iPad'ga O'rnatish</span>
+                    </div>
+                    <div class="space-y-1.5 text-slate-300 text-[11px] leading-relaxed bg-obsidian-900 p-2.5 rounded-xl border border-obsidian-750">
+                        <p>1️⃣ Safari brauzerining pastidagi <b>«Ulashish» (Share ⎋)</b> belgisini bosing.</p>
+                        <p>2️⃣ Chiqqan ro'yxatdan <b>«На экран «Домой» (Add to Home Screen ➕)»</b> ni tanlang.</p>
+                        <p>3️⃣ Yuqori o'ng burchakdagi <b>«Добавить»</b> tugmasini bosing.</p>
                     </div>
                 </div>
 
-                <!-- 2. Telefonga O'rnatish (Android & iPhone — Global Cloud) -->
-                <div class="bg-obsidian-850 border border-gold-500/30 rounded-2xl p-4 space-y-3">
-                    <div class="flex items-center gap-2 text-gold-400 font-extrabold text-sm">
-                        <span>📱</span> <span>2. Telefoningizga O'rnatish (Android & iPhone — Global Cloud)</span>
+                <!-- 3. KOMPYUTER (Desktop / Windows / Mac) -->
+                <div id="pwaDesktopSection" class="bg-obsidian-850 border border-obsidian-700 rounded-2xl p-3.5 space-y-2">
+                    <div class="flex items-center gap-2 text-slate-300 font-extrabold text-xs">
+                        <span>💻</span> <span>3. Kompyuterda O'rnatish</span>
                     </div>
-                    <p class="text-slate-300 leading-relaxed">
-                        Istalgan joydan (Wi-Fi yoki mobil internet orqali) telefoningiz kamerasi bilan quyidagi QR-kodni skanerlang yoki havolani oching:
+                    <p class="text-slate-400 text-[11px] leading-relaxed">
+                        Chrome manzil qatoridagi 🖥️ <b>«O'rnatish»</b> belgisini bosing yoki menyudan (⋮) <b>«Установить приложение AZBEK GROUP»</b> ni tanlang.
                     </p>
-                    
-                    <div class="flex flex-col sm:flex-row items-center gap-4 bg-obsidian-900 border border-obsidian-750 p-3 rounded-2xl">
-                        <div class="bg-white p-2 rounded-xl flex items-center justify-center shadow-lg">
-                            <canvas id="appDownloadQrCanvas" class="w-32 h-32"></canvas>
+                </div>
+
+                <!-- 4. QR-KOD VA BULUTLI HAVOLA -->
+                <div class="bg-obsidian-850 border border-gold-500/25 rounded-2xl p-3.5 space-y-2.5">
+                    <div class="text-gold-400 font-extrabold text-xs flex items-center gap-1.5">
+                        <span>🌐</span> <span>Boshqa Telefonlarga Ulashish:</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 bg-obsidian-900 border border-obsidian-750 p-2.5 rounded-xl">
+                        <div class="bg-white p-1.5 rounded-lg shrink-0 shadow">
+                            <canvas id="appDownloadQrCanvas" class="w-24 h-24 sm:w-28 sm:h-28"></canvas>
                         </div>
-                        <div class="space-y-2 text-[11px] text-slate-300 flex-1">
-                            <div class="flex items-center gap-1.5 font-bold text-white">
-                                <span>🌐</span> Bulutli HTTPS Manzil:
-                            </div>
+                        <div class="space-y-1.5 text-[11px] text-slate-300 flex-1 w-full">
                             <div class="flex items-center gap-1">
-                                <code id="appNetworkUrlText" class="bg-obsidian-950 text-gold-400 px-2 py-1 rounded font-mono text-[11px] border border-obsidian-700 select-all break-all">https://taken-applications-military-tourist.trycloudflare.com</code>
-                                <button onclick="copyAppNetworkUrl()" class="px-2.5 py-1 bg-gold-500 text-obsidian-950 font-black rounded text-[10px] transition shrink-0">Nusxa</button>
+                                <code id="appNetworkUrlText" class="bg-obsidian-950 text-gold-400 px-2 py-1 rounded font-mono text-[10px] sm:text-[11px] border border-obsidian-700 select-all break-all flex-1">https://taken-applications-military-tourist.trycloudflare.com</code>
+                                <button onclick="copyAppNetworkUrl()" class="px-2.5 py-1 bg-gold-500 hover:bg-gold-400 text-obsidian-950 font-black rounded text-[10px] shrink-0 active:scale-95 transition">Nusxa</button>
                             </div>
-                            <p class="text-slate-400">
-                                <b>Android (Chrome):</b> Ochilgach, ⋮ menyusidan <b>«Ilovani o'rnatish»</b> ni bosing.<br>
-                                <b>iPhone (Safari):</b> Pastdagi Ulashish 📤 tugmasidan <b>«Bosh ekranga»</b> ni tanlang.
+                            <p class="text-[10px] text-slate-400">
+                                Telefon kamerasi bilan QR-kodni skanerlang yoki havolani oching.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="pt-2">
+            <!-- Footer Close Button -->
+            <div class="pt-1">
                 <button onclick="closeAppDownloadModal()" class="w-full py-2.5 bg-obsidian-800 hover:bg-obsidian-750 text-white font-bold text-xs rounded-xl transition">
                     Tushunarli, Rahmat!
                 </button>
@@ -5400,14 +5474,17 @@
         let deferredPrompt = null;
         function initPwaServiceWorker() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(() => console.log('[AZBEK] PWA Offline Service Worker Faol!'))
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                    .then(reg => console.log('[AZBEK] PWA Offline Service Worker Faol!', reg.scope))
                     .catch(err => console.warn('[AZBEK] SW xatolik:', err));
             }
 
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
+                window.deferredInstallPrompt = e;
+                const btn = document.getElementById('btnPwaInstall');
+                if (btn) btn.classList.add('animate-pulse');
             });
         }
 
@@ -5415,6 +5492,23 @@
             const modal = document.getElementById('appDownloadModal');
             if (!modal) return;
             modal.classList.remove('hidden');
+
+            // Device-aware section highlighting
+            const ua = navigator.userAgent || '';
+            const isAndroid = /Android/i.test(ua);
+            const isIos = /iPhone|iPad|iPod/i.test(ua);
+
+            const androidSec = document.getElementById('pwaAndroidSection');
+            const iosSec = document.getElementById('pwaIosSection');
+            const deskSec = document.getElementById('pwaDesktopSection');
+
+            if (isAndroid && androidSec) {
+                androidSec.classList.add('ring-2', 'ring-emerald-400');
+            } else if (isIos && iosSec) {
+                iosSec.classList.add('ring-2', 'ring-blue-400');
+            } else if (deskSec) {
+                deskSec.classList.add('ring-2', 'ring-gold-400');
+            }
 
             const isRemoteDomain = (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
             const appUrl = isRemoteDomain ? window.location.origin : 'https://taken-applications-military-tourist.trycloudflare.com';
@@ -5452,6 +5546,25 @@
             });
         }
 
+        function triggerPwaPromptFromModal() {
+            const promptEvent = window.deferredInstallPrompt || deferredPrompt;
+            if (promptEvent) {
+                promptEvent.prompt();
+                promptEvent.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        closeAppDownloadModal();
+                        alert("🎉 Tabriklaymiz!\n\nAZBEK GROUP ilovasi telefoningiz bosh ekraniga muvaffaqiyatli o'rnatildi.");
+                        const btn = document.getElementById('btnPwaInstall');
+                        if (btn) btn.innerHTML = '<span>✅</span> <span>O\'rnatilgan</span>';
+                    }
+                    window.deferredInstallPrompt = null;
+                    deferredPrompt = null;
+                });
+            } else {
+                alert("📱 Telefoningizda to'g'ridan-to'g'ri o'rnatish uchun:\n\n1. Brauzerning eng yuqori o'ng burchagidagi 3 ta nuqta (⋮) belgisini bosing;\n2. Chiqqan menyudan 'Установить приложение' (yoki 'Добавить на главный экран') ni tanlang;\n3. 'Установить' tugmasini bosing — ilova darhol telefoningiz bosh ekraniga tushadi!");
+            }
+        }
+
         function promptInstallPwa() {
             const promptEvent = window.deferredInstallPrompt || deferredPrompt;
             if (promptEvent) {
@@ -5459,14 +5572,25 @@
                 promptEvent.userChoice.then((choiceResult) => {
                     console.log('Foydalanuvchi tanlovi:', choiceResult.outcome);
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('Ilova muvaffaqiyatli o\'rnatildi!');
+                        alert("🎉 Tabriklaymiz!\n\nAZBEK GROUP ilovasi telefoningiz bosh ekraniga muvaffaqiyatli o'rnatildi.");
+                        const btn = document.getElementById('btnPwaInstall');
+                        if (btn) btn.innerHTML = '<span>✅</span> <span>O\'rnatilgan</span>';
                     }
                     window.deferredInstallPrompt = null;
                     deferredPrompt = null;
                 });
-            } else {
-                alert("ℹ️ Diqqat: Bu ilova kompyuteringizga allaqachon o'rnatilgan!\n\nChrome ilovani bir marta o'rnatgach, qaytadan 'Ruxsat berish' oynasini chiqarmaydi, balki yuqorida 'Открыть в приложении' deb ochib beradi.\n\nAgar aynan o'sha 'Ruxsat berish' oynasini qaytadan ko'rmoqchi bo'lsangiz:\n1. Chrome'da chrome://apps manziliga kiring;\n2. AZBEK ustiga o'ng tugmani bosib 'Удалить из Chrome' qiling;\n3. So'ngra sahifani yangilab yana 'O'rnatish' tugmasini bosing — o'sha ruxsat so'rash oynasi darhol chiqadi!");
+                return;
             }
+
+            // Check if already in standalone app mode
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isStandalone) {
+                alert("✅ Siz allaqachon AZBEK GROUP ilovasi ichidasiz!\n\nIlova to'liq avtonom rejimda ishlamoqda.");
+                return;
+            }
+
+            // If prompt is not dispatched yet, open the friendly visual installation guide
+            openAppDownloadModal();
         }
 
         // =====================================================

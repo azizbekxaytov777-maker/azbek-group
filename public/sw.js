@@ -1,30 +1,32 @@
 /**
- * AZBEK SUPER APP — Offline Service Worker (v5.0 UNIFIED)
- * Network-First for Navigation & Icons (so updates appear instantly)
+ * AZBEK GROUP SUPER APP — Offline Service Worker (v5.3 UNIFIED)
+ * Network-First for Navigation & Icons (updates appear instantly)
  * Cache-First with Network fallback for offline assets
  */
 
-const CACHE_NAME = 'azbek-group-v5.1';
+const CACHE_NAME = 'azbek-group-v5.3';
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  './favicon.ico',
-  './assets/logo.jpg',
-  './assets/azbek_icon_512.png',
-  './assets/azbek_icon_192.png',
-  './assets/icon.png',
-  './assets/icon.svg',
-  './assets/qrcode.min.js',
-  './assets/html5-qrcode.min.js'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/favicon.ico',
+  '/assets/logo.jpg',
+  '/assets/azbek_icon_512.png',
+  '/assets/azbek_icon_192.png',
+  '/assets/icon.png',
+  '/assets/icon.svg',
+  '/assets/qrcode.min.js',
+  '/assets/html5-qrcode.min.js'
 ];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[AZBEK SW v4.0] Keshlanmoqda:', ASSETS_TO_CACHE);
-      return cache.addAll(ASSETS_TO_CACHE);
+      console.log('[AZBEK SW] Keshlanmoqda:', ASSETS_TO_CACHE);
+      return cache.addAll(ASSETS_TO_CACHE).catch(err => {
+        console.warn('[AZBEK SW] Ba\'zi fayllar keshlanmadi:', err);
+      });
     })
   );
 });
@@ -60,7 +62,7 @@ self.addEventListener('fetch', (event) => {
           }
           return networkResponse;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => caches.match('/index.html').then(res => res || caches.match('/')))
     );
     return;
   }
@@ -77,6 +79,9 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         }
         return networkResponse;
+      }).catch(() => {
+        // Fallback for missing images/resources
+        return new Response('', { status: 408, statusText: 'Offline' });
       });
     })
   );

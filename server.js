@@ -2809,8 +2809,14 @@ const server = http.createServer(async (req, res) => {
         }
 
         const ext = path.extname(filePath).toLowerCase();
-        const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+        let contentType = MIME_TYPES[ext] || 'application/octet-stream';
+        if (filePath.endsWith('manifest.json')) {
+            contentType = 'application/manifest+json; charset=UTF-8';
+        }
         const headers = { 'Content-Type': contentType };
+        if (filePath.endsWith('sw.js')) {
+            headers['Service-Worker-Allowed'] = '/';
+        }
         if (['.html', '.js', '.json', '.ico', '.png', '.jpg', '.svg'].includes(ext)) {
             headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
             headers['Pragma'] = 'no-cache';
