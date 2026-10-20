@@ -1,0 +1,31 @@
+{
+  "appId": "com.azbekgroup.business",
+  "appName": "AZBEK — Biznes, Kassa va Savdo",
+  "shortDescription": "Do'kon, restoran, moyka va ishlab chiqarish uchun universal kassa va boshqaruv",
+  "keywords": [
+    "azbek",
+    "azbek pos",
+    "azbek group",
+    "kassa dasturi",
+    "dokon avtomatlashtirish",
+    "savdo dasturi",
+    "restoran dasturi",
+    "nasiya daftari",
+    "qarz daftari",
+    "pos terminal uzbekistan",
+    "skaner kassa",
+    "moyka boshqaruv",
+    "ombor hisoboti"
+  ],
+  "categories": {
+    "googlePlay": "BUSINESS",
+    "appStore": "Business / Finance"
+  },
+  "securityFeatures": [
+    "HMAC-SHA256 Offline Cryptographic License Verification",
+    "Founder HQ PIN & Token Authentication",
+    "Anti-Brute-Force Rate Limiter",
+    "Atomic Transaction Database with Auto-Backup",
+    "Strict XSS & Clickjacking Security Headers"
+  ]
+}

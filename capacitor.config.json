@@ -1,0 +1,20 @@
+{
+  "appId": "com.azbekgroup.business",
+  "appName": "AZBEK",
+  "webDir": "public",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#070A10",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "backgroundColor": "#070A10",
+      "style": "DARK"
+    }
+  }
+}

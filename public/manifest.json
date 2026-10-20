@@ -1,0 +1,70 @@
+{
+  "name": "AZBEK GROUP — Universal Biznes Boshqaruv Super Ilovasi",
+  "short_name": "AZBEK GROUP",
+  "description": "AZBEK GROUP korxonalar ekotizimi uchun yagona bulutli biznes boshqaruv super-ilovasi",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070A10",
+  "theme_color": "#D4AF37",
+  "scope": "./",
+  "lang": "uz",
+  "categories": ["business", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "./assets/azbek_icon_512.png?v=5.0",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/azbek_icon_192.png?v=5.0",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icon.png?v=5.0",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon.svg?v=5.0",
+      "sizes": "512x512 192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kassa / POS",
+      "short_name": "Kassa",
+      "description": "Skaner va tezkor to'lov",
+      "url": "./index.html#kassa",
+      "icons": [{ "src": "./assets/icon.png?v=5.0", "sizes": "96x96" }]
+    },
+    {
+      "name": "Restoran & Kafe",
+      "short_name": "Restoran",
+      "description": "Stollar va buyurtmalar",
+      "url": "./index.html#restaurant",
+      "icons": [{ "src": "./assets/icon.png?v=5.0", "sizes": "96x96" }]
+    },
+    {
+      "name": "Xizmatlar & Moyka",
+      "short_name": "Xizmatlar",
+      "description": "Avtoyuvish va ustaxona",
+      "url": "./index.html#services",
+      "icons": [{ "src": "./assets/icon.png?v=5.0", "sizes": "96x96" }]
+    },
+    {
+      "name": "Asoschi HQ",
+      "short_name": "Asoschi",
+      "description": "Barcha mijozlar va litsenziyalar boshqaruvi",
+      "url": "./index.html#admin",
+      "icons": [{ "src": "./assets/icon.svg", "sizes": "96x96" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
