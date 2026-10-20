@@ -306,10 +306,10 @@ const DEFAULT_DB = {
             companyId: "STR-004",
             username: "moyka",
             password: "3333",
-            fullName: "Rustam Usta (Moyka / Avtoservis / Sex)",
+            fullName: "Rustam Usta (Moyka / Avtoservis / Ustaxona)",
             role: "MASTER",
-            roleBadge: "🚗 Xizmatlar & Sex",
-            industryName: "Xizmat ko'rsatish & Sex",
+            roleBadge: "🚗 Xizmatlar & Ustaxona",
+            industryName: "Xizmat ko'rsatish & Ustaxona",
             allowedTabs: ["services", "profile"],
             defaultTab: "services",
             branch: "Crystal Avtoyuvish (STR-004)"
@@ -569,12 +569,17 @@ function loadDB() {
         data.users.forEach(u => {
             if (u.role === 'FOUNDER' || u.username === 'azbek') {
                 u.companyId = 'AZBEK-HQ';
-                u.allowedTabs = ['admin', 'company', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'audit', 'profile'];
+                u.allowedTabs = ['admin', 'dashboard', 'audit', 'profile'];
                 u.defaultTab = 'admin';
                 u.roleBadge = '👑 Asoschi (Super Admin)';
                 u.industryName = 'Asoschi HQ & Ekotizim';
                 needsSave = true;
                 return;
+            }
+            if (u.role === 'MASTER') {
+                u.roleBadge = "🚗 Xizmatlar & Ustaxona";
+                u.industryName = "Xizmat ko'rsatish & Ustaxona";
+                needsSave = true;
             }
             if (!u.companyId) {
                 if (u.username === 'restoran' || (u.branch && u.branch.includes('STR-002'))) u.companyId = 'STR-002';
@@ -2043,11 +2048,11 @@ const server = http.createServer(async (req, res) => {
             if (mfgKeywords.some(kw => text.includes(kw))) {
                 return {
                     category: 'Ishlab chiqarish',
-                    label: input ? String(input).trim() : '🏭 Ishlab Chiqarish & Sex',
+                    label: input ? String(input).trim() : '🏭 Ishlab Chiqarish & Ustaxona',
                     ownerTabs: ['company', 'dashboard', 'services', 'inventory', 'kassa', 'debts', 'audit', 'profile'],
                     defaultTab: 'inventory',
                     seededRoles: [
-                        { roleCode: 'FOREMAN', roleName: 'Sex Mudiri / Bosh Usta', icon: '🏭', allowedTabs: ['services', 'inventory', 'profile'], defaultTab: 'services' },
+                        { roleCode: 'FOREMAN', roleName: 'Ustaxona Boshlig\'i / Bosh Usta', icon: '🏭', allowedTabs: ['services', 'inventory', 'profile'], defaultTab: 'services' },
                         { roleCode: 'WAREHOUSE', roleName: 'Ombor Mudiri', icon: '📦', allowedTabs: ['inventory', 'profile'], defaultTab: 'inventory' },
                         { roleCode: 'MANAGER', roleName: 'Hisobchi / Administrator', icon: '📊', allowedTabs: ['dashboard', 'kassa', 'debts', 'profile'], defaultTab: 'dashboard' }
                     ]
@@ -2517,9 +2522,9 @@ const server = http.createServer(async (req, res) => {
                     'CASHIER': { badge: "🛒 Do'kon Kassiri", industry: "Savdo / Supermarket", tabs: ["kassa", "inventory", "debts", "profile"], def: "kassa" },
                     'WAREHOUSE': { badge: "📦 Ombor Mudiri", industry: "Ombor va Kirim-Chiqim", tabs: ["inventory", "kassa", "profile"], def: "inventory" },
                     'WAITER':  { badge: "🍽️ Restoran & Kafe", industry: "Restoran / Oshxona", tabs: ["restaurant", "profile"], def: "restaurant" },
-                    'MASTER':  { badge: "🚗 Xizmatlar & Sex", industry: "Xizmat ko'rsatish & Sex", tabs: ["services", "profile"], def: "services" },
+                    'MASTER':  { badge: "🚗 Xizmatlar & Ustaxona", industry: "Xizmat ko'rsatish & Ustaxona", tabs: ["services", "profile"], def: "services" },
                     'MANAGER': { badge: "📊 Menejer & Nasiya CRM", industry: "Boshqaruv va Hisobot", tabs: ["dashboard", "kassa", "inventory", "debts", "profile"], def: "dashboard" },
-                    'FOUNDER': { badge: "👑 Asoschi (Super Admin)", industry: "Barcha Sohalar & HQ", tabs: ["admin", "company", "dashboard", "kassa", "inventory", "restaurant", "services", "debts", "audit", "profile"], def: "admin" }
+                    'FOUNDER': { badge: "👑 Asoschi (Super Admin)", industry: "Barcha Sohalar & HQ", tabs: ["admin", "dashboard", "audit", "profile"], def: "admin" }
                 };
 
                 // Check if role matches a company custom role first

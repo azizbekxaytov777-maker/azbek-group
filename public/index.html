@@ -183,7 +183,7 @@
                 </button>
 
                 <button onclick="switchTab('services'); toggleNxsSidebar(false);" id="sideTabServices" class="w-full px-3 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between text-slate-300 hover:bg-obsidian-800">
-                    <span class="flex items-center gap-2.5"><span>🚗</span> <span>Xizmatlar & Sex</span></span>
+                    <span class="flex items-center gap-2.5"><span>🚗</span> <span>Xizmatlar & Ustaxona</span></span>
                     <span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-400">Talon</span>
                 </button>
 
@@ -827,7 +827,7 @@
         </section>
 
         <!-- ===================================================== -->
-        <!-- TAB 4: XIZMATLAR & SEX (MOYKA, AVTO, SALON) -->
+        <!-- TAB 4: XIZMATLAR & USTAXONA (MOYKA, AVTO, SALON) -->
         <!-- ===================================================== -->
         <section id="viewServices" class="hidden space-y-4">
             <!-- Child-Friendly 1-2-3 Banner -->
@@ -845,7 +845,7 @@
 
             <div class="flex justify-between items-center">
                 <div>
-                    <h2 class="text-base font-extrabold text-white">🚗 Xizmatlar & Ustaxona / Sex</h2>
+                    <h2 class="text-base font-extrabold text-white">🚗 Xizmatlar & Ustaxona</h2>
                     <p class="text-xs text-slate-400">Avtoyuvish, ta'mirlash, salon va ishlab chiqarish buyurtmalari.</p>
                 </div>
                 <button onclick="openAddServiceModal()" class="px-3 py-2 bg-gold-500 text-obsidian-950 text-xs font-bold rounded-xl shadow flex items-center gap-1.5 active:scale-95 transition">
@@ -1213,7 +1213,7 @@
                     <select id="newUsrRole" class="bg-obsidian-900 border border-obsidian-700 rounded-lg px-2.5 py-2 text-white">
                         <option value="CASHIER">🛒 Do'kon Kassiri (Savdo)</option>
                         <option value="WAITER">🍽️ Restoran / Kafe Ofitsianti</option>
-                        <option value="MASTER">🚗 Moyka / Servis / Sex Ustasi</option>
+                        <option value="MASTER">🚗 Moyka / Avtoservis / Ustaxona</option>
                         <option value="MANAGER">📊 Do'kon Menejeri & CRM</option>
                         <option value="FOUNDER">👑 Asoschi (Super Admin)</option>
                     </select>
@@ -2051,7 +2051,7 @@
                         <button type="button" onclick="setIndustryInput('Fast food / Pitseriya')" class="px-2 py-0.5 rounded-lg bg-obsidian-800 text-amber-300 hover:text-white border border-amber-500/30">🍔 Fast-food</button>
                         <button type="button" onclick="setIndustryInput('Avtomoyka / Deteyling')" class="px-2 py-0.5 rounded-lg bg-obsidian-800 text-cyan-300 hover:text-white border border-cyan-500/30">🚿 Moyka</button>
                         <button type="button" onclick="setIndustryInput('Avtoservis & Usta')" class="px-2 py-0.5 rounded-lg bg-obsidian-800 text-cyan-300 hover:text-white border border-cyan-500/30">🔧 Servis</button>
-                        <button type="button" onclick="setIndustryInput('Mebel / Sex / Zavod')" class="px-2 py-0.5 rounded-lg bg-obsidian-800 text-emerald-300 hover:text-white border border-emerald-500/30">🏭 Sex</button>
+                        <button type="button" onclick="setIndustryInput('Mebel / Ustaxona / Zavod')" class="px-2 py-0.5 rounded-lg bg-obsidian-800 text-emerald-300 hover:text-white border border-emerald-500/30">🏭 Ustaxona</button>
                     </div>
 
                     <!-- Avtomatik konfiguratsiya preview -->
@@ -2209,7 +2209,7 @@
                     <div class="space-y-1.5">
                         <div class="flex items-center justify-between">
                             <span class="font-extrabold text-blue-400 text-sm">🚗 3. Moyka / Servis Ustasi</span>
-                            <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-bold">Xizmat & Sex</span>
+                            <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-bold">Xizmat & Ustaxona</span>
                         </div>
                         <p class="text-slate-300 leading-relaxed">
                             <b>1-qadam:</b> <code class="text-gold-400">+ Yangi Talon</code> tugmasini bosib mashina/mijozni kiriting.<br>
@@ -2624,9 +2624,10 @@
 
         function applyUserSession(user) {
             if (user.role === 'FOUNDER' || user.username === 'azbek') {
-                user.allowedTabs = ['admin', 'company', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'audit', 'profile'];
+                user.allowedTabs = ['admin', 'dashboard', 'audit', 'profile'];
                 user.defaultTab = 'admin';
                 user.roleBadge = '👑 Asoschi (Super Admin)';
+                sessionStorage.setItem('azbek_active_user', JSON.stringify(user));
             } else {
                 if (!user.allowedTabs) user.allowedTabs = ['kassa', 'inventory', 'profile'];
                 if (!user.allowedTabs.includes('profile')) user.allowedTabs.push('profile');
@@ -4017,9 +4018,9 @@
                 if (modEl) modEl.innerText = "🚗 Xizmatlar & Talonlar, 🛒 Kassa, 📖 Nasiya, 🏢 HR";
                 if (rolesEl) rolesEl.innerText = "🚗 Bosh Usta, 🚿 Ijrochi / Xodim, 🛒 Kassir";
             } else if (mfgKw.some(kw => text.includes(kw))) {
-                labelEl.innerHTML = `<span class="text-emerald-400 font-bold">🏭 Ishlab Chiqarish & Sex</span>`;
-                if (modEl) modEl.innerText = "🏭 Sex & Buyurtma, 📦 Ombor, 🛒 Kassa, 📖 Nasiya, 🏢 HR";
-                if (rolesEl) rolesEl.innerText = "🏭 Sex Mudiri, 📦 Omborchi, 📊 Hisobchi";
+                labelEl.innerHTML = `<span class="text-emerald-400 font-bold">🏭 Ishlab Chiqarish & Ustaxona</span>`;
+                if (modEl) modEl.innerText = "🏭 Ustaxona & Buyurtma, 📦 Ombor, 🛒 Kassa, 📖 Nasiya, 🏢 HR";
+                if (rolesEl) rolesEl.innerText = "🏭 Ustaxona Boshlig'i, 📦 Omborchi, 📊 Hisobchi";
             } else {
                 labelEl.innerHTML = `<span class="text-gold-400 font-bold">🛒 Savdo & Do'kon</span>`;
                 if (modEl) modEl.innerText = "🛒 Kassa / POS, 📦 Ombor, 📖 Nasiya, 📊 Hisobot, 🏢 HR";
@@ -4471,7 +4472,7 @@
                 { key: 'kassa', label: "🛒 Kassa / Savdo POS" },
                 { key: 'inventory', label: "📦 Ombor & Vozvrat (V1)" },
                 { key: 'restaurant', label: "🍽️ Restoran & Kafe (Stollar)" },
-                { key: 'services', label: "🚗 Xizmatlar & Sex (Talonlar)" },
+                { key: 'services', label: "🚗 Xizmatlar & Ustaxona (Talonlar)" },
                 { key: 'debts', label: "📖 Nasiya Daftari (CRM)" },
                 { key: 'company', label: "🏢 Mening Kompaniyam (HR & Rollar)" },
                 { key: 'admin', label: "👑 Asoschi HQ (Super Admin)" },

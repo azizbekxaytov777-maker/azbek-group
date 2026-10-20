@@ -759,13 +759,7 @@
       "industryName": "Asoschi HQ & Ekotizim",
       "allowedTabs": [
         "admin",
-        "company",
         "dashboard",
-        "kassa",
-        "inventory",
-        "restaurant",
-        "services",
-        "debts",
         "audit",
         "profile"
       ],
@@ -818,8 +812,8 @@
       "password": "3333",
       "fullName": "Rustam Usta (Moyka / Avtoservis / Sex)",
       "role": "MASTER",
-      "roleBadge": "🚗 Xizmatlar & Sex",
-      "industryName": "Xizmat ko'rsatish & Sex",
+      "roleBadge": "🚗 Xizmatlar & Ustaxona",
+      "industryName": "Xizmat ko'rsatish & Ustaxona",
       "allowedTabs": [
         "services",
         "profile"
@@ -1126,6 +1120,39 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": 1792496041370,
+      "timestamp": "2026-10-20T11:34:00.594Z",
+      "userName": "Azbek Asoschi (NXS)",
+      "userRole": "👑 Asoschi (Super Admin)",
+      "action": "TIZIMGA_KIRISH",
+      "module": "NXS Auth",
+      "details": "[AZBEK-HQ] azbek (AZBEK GLOBAL HQ) tizimga kirdi",
+      "ipAddress": "127.0.0.1",
+      "companyId": "AZBEK-HQ"
+    },
+    {
+      "id": 1792496025751,
+      "timestamp": "2026-10-20T11:33:44.854Z",
+      "userName": "azbek",
+      "userRole": "MEHMON",
+      "action": "LOGIN_XATO",
+      "module": "Xavfsizlik",
+      "details": "Noto'g'ri Kompaniya ID (ANY) yoki login/parol (azbek)",
+      "ipAddress": "127.0.0.1",
+      "companyId": "AZBEK-HQ"
+    },
+    {
+      "id": 1792495886191,
+      "timestamp": "2026-10-20T11:31:25.720Z",
+      "userName": "Azbek Asoschi (NXS)",
+      "userRole": "👑 Asoschi (Super Admin)",
+      "action": "TIZIMGA_KIRISH",
+      "module": "NXS Auth",
+      "details": "[AZBEK-HQ] azbek (AZBEK GLOBAL HQ) tizimga kirdi",
+      "ipAddress": "127.0.0.1",
+      "companyId": "AZBEK-HQ"
+    },
     {
       "id": 1792493479108,
       "timestamp": "2026-10-20T10:51:18.821Z",
