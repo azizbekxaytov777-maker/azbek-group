@@ -1121,6 +1121,28 @@
   ],
   "auditLogs": [
     {
+      "id": 1792499019170,
+      "timestamp": "2026-10-20T12:23:38.309Z",
+      "userName": "Sardor Kassir (Savdo / Do'kon)",
+      "userRole": "🛒 Do'kon Kassiri",
+      "action": "TIZIMGA_KIRISH",
+      "module": "NXS Auth",
+      "details": "[STR-001] kassir (Oazis Supermarket (STR-001)) tizimga kirdi",
+      "ipAddress": "127.0.0.1",
+      "companyId": "STR-001"
+    },
+    {
+      "id": 1792498977509,
+      "timestamp": "2026-10-20T12:22:56.773Z",
+      "userName": "Botir Rahimov (Rayhon Milliy Taomlar Egasi)",
+      "userRole": "🏢 Kompaniya Egasi (STR-002)",
+      "action": "TIZIMGA_KIRISH",
+      "module": "NXS Auth",
+      "details": "[STR-002] botir (Rayhon Milliy Taomlar (STR-002)) tizimga kirdi",
+      "ipAddress": "127.0.0.1",
+      "companyId": "STR-002"
+    },
+    {
       "id": 1792496041370,
       "timestamp": "2026-10-20T11:34:00.594Z",
       "userName": "Azbek Asoschi (NXS)",
