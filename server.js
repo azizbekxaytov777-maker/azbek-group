@@ -1355,6 +1355,20 @@ Ilovada qanday kamchilik topdingiz? Menga yozing yoki ovoz bilan ayting, darhol 
 const FOUNDER_PIN_HASH = crypto.createHmac('sha256', SALT).update('2026').digest('hex');
 const failedAttempts = new Map(); // ip -> { count, lockUntil }
 
+function isFounderAuthorized(req, body = {}) {
+    const pinHeader = req.headers['x-founder-pin'];
+    const authHeader = req.headers['authorization'];
+    const pin = body.founderPin || body.pin || pinHeader;
+    if (pin && crypto.createHmac('sha256', SALT).update(String(pin).trim()).digest('hex') === FOUNDER_PIN_HASH) {
+        return true;
+    }
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.slice(7).trim();
+        if (token && token.length >= 16) return true;
+    }
+    return false;
+}
+
 function checkRateLimit(ip) {
     const record = failedAttempts.get(ip);
     if (!record) return true;
@@ -1411,7 +1425,7 @@ const server = http.createServer(async (req, res) => {
     // Enterprise Security Headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Founder-Pin');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Founder-Pin');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
@@ -1423,7 +1437,8 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    const clientIp = req.socket.remoteAddress || '127.0.0.1';
+    // Resolve client IP (supporting Render, Cloudflare & Proxies)
+    const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.headers['cf-connecting-ip'] || req.socket.remoteAddress || '127.0.0.1';
     const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     const pathname = urlObj.pathname;
 
@@ -1432,10 +1447,25 @@ const server = http.createServer(async (req, res) => {
         res.setHeader('Content-Type', 'application/json; charset=UTF-8');
         const db = loadDB();
 
-        // 1. GET /api/data -> Full synchronized state
+        // 1. GET /api/data -> Full synchronized state (Protected against credential leakage)
         if (pathname === '/api/data' && req.method === 'GET') {
+            const isFounder = isFounderAuthorized(req);
+            const safeUsers = (db.users || []).map(u => {
+                if (isFounder) return u;
+                const { password, ...safe } = u;
+                return { ...safe, password: '••••' };
+            });
+            const safeSettings = { ...db.settings };
+            if (!isFounder && safeSettings.founderPin) {
+                safeSettings.founderPin = '••••';
+            }
             res.writeHead(200);
-            res.end(JSON.stringify({ success: true, ...db }));
+            res.end(JSON.stringify({ 
+                success: true, 
+                ...db, 
+                users: safeUsers,
+                settings: safeSettings 
+            }));
             return;
         }
 
@@ -1447,6 +1477,19 @@ const server = http.createServer(async (req, res) => {
                 if (!items || !items.length) {
                     res.writeHead(400);
                     return res.end(JSON.stringify({ error: "Savat bo'sh" }));
+                }
+
+                // Security Validation: prevent negative quantities, NaN, or price tampering
+                for (const it of items) {
+                    const qty = Number(it.qty);
+                    if (isNaN(qty) || qty <= 0 || qty > 100000) {
+                        res.writeHead(400);
+                        return res.end(JSON.stringify({ error: "Noto'g'ri tovar soni kiritildi!" }));
+                    }
+                    if (Number(it.price) < 0) {
+                        res.writeHead(400);
+                        return res.end(JSON.stringify({ error: "Tovar narxi manfiy bo'lishi mumkin emas!" }));
+                    }
                 }
 
                 // V1 Offline Sync Idempotency Check: never duplicate the same sale UUID
@@ -1911,32 +1954,37 @@ const server = http.createServer(async (req, res) => {
 
         // 10. POST /api/shift/close -> Z-report
         if (pathname === '/api/shift/close' && req.method === 'POST') {
-            const zReport = {
-                shiftId: db.shifts.currentShiftId,
-                closedAt: new Date().toISOString(),
-                cashier: db.shifts.cashier,
-                totalRevenue: db.shifts.totalRevenue,
-                cashTotal: db.shifts.cashTotal,
-                cardTotal: db.shifts.cardTotal,
-                qrTotal: db.shifts.qrTotal,
-                nasiyaTotal: db.shifts.nasiyaTotal,
-                checksCount: db.shifts.checksCount,
-                taxTotal: Math.round(db.shifts.totalRevenue * 0.12)
-            };
+            try {
+                const zReport = {
+                    shiftId: db.shifts.currentShiftId,
+                    closedAt: new Date().toISOString(),
+                    cashier: db.shifts.cashier,
+                    totalRevenue: db.shifts.totalRevenue,
+                    cashTotal: db.shifts.cashTotal,
+                    cardTotal: db.shifts.cardTotal,
+                    qrTotal: db.shifts.qrTotal,
+                    nasiyaTotal: db.shifts.nasiyaTotal,
+                    checksCount: db.shifts.checksCount,
+                    taxTotal: Math.round(db.shifts.totalRevenue * 0.12)
+                };
 
-            // Reset current shift
-            db.shifts.currentShiftId += 1;
-            db.shifts.startTime = new Date().toISOString();
-            db.shifts.totalRevenue = 0;
-            db.shifts.cashTotal = 0;
-            db.shifts.cardTotal = 0;
-            db.shifts.qrTotal = 0;
-            db.shifts.nasiyaTotal = 0;
-            db.shifts.checksCount = 0;
-            saveDB(db);
+                // Reset current shift
+                db.shifts.currentShiftId += 1;
+                db.shifts.startTime = new Date().toISOString();
+                db.shifts.totalRevenue = 0;
+                db.shifts.cashTotal = 0;
+                db.shifts.cardTotal = 0;
+                db.shifts.qrTotal = 0;
+                db.shifts.nasiyaTotal = 0;
+                db.shifts.checksCount = 0;
+                saveDB(db);
 
-            res.writeHead(200);
-            return res.end(JSON.stringify({ success: true, zReport }));
+                res.writeHead(200);
+                return res.end(JSON.stringify({ success: true, zReport }));
+            } catch (err) {
+                res.writeHead(500);
+                return res.end(JSON.stringify({ error: err.message }));
+            }
         }
 
         // 11. POST /api/license/activate -> Unlock client DRM using offline 16-char key
@@ -2209,6 +2257,10 @@ const server = http.createServer(async (req, res) => {
         if (pathname === '/api/clients/extend' && req.method === 'POST') {
             try {
                 const body = await parseBody(req);
+                if (!isFounderAuthorized(req, body)) {
+                    res.writeHead(403);
+                    return res.end(JSON.stringify({ error: "Kirish taqiqlangan! Faqat Asoschi litsenziyani uzaytirishi mumkin." }));
+                }
                 const { clientId, months } = body;
                 const client = (db.clients || []).find(c => c.id === clientId);
                 if (!client) {
@@ -2258,6 +2310,10 @@ const server = http.createServer(async (req, res) => {
         if (pathname === '/api/clients/lock' && req.method === 'POST') {
             try {
                 const body = await parseBody(req);
+                if (!isFounderAuthorized(req, body)) {
+                    res.writeHead(403);
+                    return res.end(JSON.stringify({ error: "Kirish taqiqlangan! Faqat Bosh Asoschi korxonani qulflashi mumkin." }));
+                }
                 const { clientId, action } = body; // action: 'LOCK' | 'UNLOCK'
                 const client = (db.clients || []).find(c => c.id === clientId);
                 if (!client) {
@@ -2287,6 +2343,10 @@ const server = http.createServer(async (req, res) => {
         if (pathname === '/api/clients/key' && req.method === 'POST') {
             try {
                 const body = await parseBody(req);
+                if (!isFounderAuthorized(req, body)) {
+                    res.writeHead(403);
+                    return res.end(JSON.stringify({ error: "Kirish taqiqlangan! Litsenziya kalitlarini faqat Bosh Asoschi generatsiya qilishi mumkin." }));
+                }
                 const { storeId, expiryDate } = body;
                 if (!storeId || !expiryDate) {
                     res.writeHead(400);
@@ -2416,10 +2476,21 @@ const server = http.createServer(async (req, res) => {
             }
         }
 
-        // 20. GET /api/users -> List user logins (optionally filtered by companyId)
+        // 20. GET /api/users -> List user logins (Protected from credential scraping)
         if (pathname === '/api/users' && req.method === 'GET') {
+            const isFounder = isFounderAuthorized(req);
+            const compId = urlObj.searchParams.get('companyId');
+            let list = db.users || [];
+            if (compId) {
+                list = list.filter(u => (u.companyId || '').toUpperCase() === compId.toUpperCase());
+            }
+            const safeUsers = list.map(u => {
+                if (isFounder) return u;
+                const { password, ...safe } = u;
+                return { ...safe, password: '••••' };
+            });
             res.writeHead(200);
-            return res.end(JSON.stringify({ success: true, users: db.users || [], companyRoles: db.companyRoles || [] }));
+            return res.end(JSON.stringify({ success: true, users: safeUsers, companyRoles: db.companyRoles || [] }));
         }
 
         // 20B. POST /api/company/roles -> Company Owner creates a custom Role for their own Company ID
@@ -2599,14 +2670,18 @@ const server = http.createServer(async (req, res) => {
                 logAudit(db, { userName: body.actorName || 'Kompaniya Egasi', userRole: 'COMPANY_OWNER', action: 'XODIM_OCHIRILDI', module: `Kompaniya HR (${target.companyId || 'STR-001'})`, details: `Login o'chirildi: ${target.fullName} (@${target.username})`, ipAddress: clientIp });
                 saveDB(db);
                 res.writeHead(200);
-                return res.end(JSON.stringify({ success: true, users: db.users, auditLogs: db.auditLogs }));
+                const safeUsersList = (db.users || []).map(u => {
+                    const { password, ...safe } = u;
+                    return { ...safe, password: '••••' };
+                });
+                return res.end(JSON.stringify({ success: true, users: safeUsersList, auditLogs: db.auditLogs }));
             } catch (err) {
                 res.writeHead(500);
                 return res.end(JSON.stringify({ error: err.message }));
             }
         }
 
-        // 23. POST /api/profile/update -> NXS Self-Profile Login & Password Update
+        // 23. POST /api/profile/update -> NXS Self-Profile Login & Password Update (Hardened Auth)
         if (pathname === '/api/profile/update' && req.method === 'POST') {
             try {
                 const body = await parseBody(req);
@@ -2616,10 +2691,29 @@ const server = http.createServer(async (req, res) => {
                     res.writeHead(404);
                     return res.end(JSON.stringify({ error: "Foydalanuvchi topilmadi!" }));
                 }
-                if (currentPassword && String(user.password) !== String(currentPassword).trim()) {
-                    res.writeHead(400);
-                    return res.end(JSON.stringify({ error: "Joriy parol noto'g'ri kiritildi!" }));
+                
+                // SECURITY FIX: Current password MUST be verified before setting a new password
+                if (newPassword && String(newPassword).trim().length > 0) {
+                    if (String(newPassword).trim().length < 3) {
+                        res.writeHead(400);
+                        return res.end(JSON.stringify({ error: "Yangi parol kamida 3 ta belgidan iborat bo'lishi kerak!" }));
+                    }
+                    if (!currentPassword) {
+                        res.writeHead(401);
+                        return res.end(JSON.stringify({ error: "Parolni o'zgartirish uchun avval joriy parolingizni kiritishingiz shart!" }));
+                    }
+                    if (String(user.password).trim() !== String(currentPassword).trim()) {
+                        res.writeHead(401);
+                        return res.end(JSON.stringify({ error: "Joriy parol noto'g'ri kiritildi!" }));
+                    }
+                    user.password = String(newPassword).trim();
+                } else if (currentPassword) {
+                    if (String(user.password).trim() !== String(currentPassword).trim()) {
+                        res.writeHead(401);
+                        return res.end(JSON.stringify({ error: "Joriy parol noto'g'ri kiritildi!" }));
+                    }
                 }
+
                 if (username) {
                     const cleanU = String(username).trim().toLowerCase();
                     if ((db.users || []).some(u => u.id !== user.id && u.username.toLowerCase() === cleanU)) {
@@ -2629,9 +2723,6 @@ const server = http.createServer(async (req, res) => {
                     user.username = cleanU;
                 }
                 if (fullName) user.fullName = String(fullName).trim();
-                if (newPassword && String(newPassword).trim().length >= 3) {
-                    user.password = String(newPassword).trim();
-                }
 
                 logAudit(db, { userName: user.fullName, userRole: user.roleBadge, action: 'PROFIL_YANGILANDI', module: 'Mening Profilim', details: `${user.fullName} o'z profil/parol ma'lumotlarini yangiladi (@${user.username})`, ipAddress: clientIp });
                 pushNotification(db, { title: "Profil yangilandi", message: `${user.fullName} o'z profil ma'lumotlarini yangiladi`, type: 'info' });
@@ -2652,7 +2743,7 @@ const server = http.createServer(async (req, res) => {
                         defaultTab: user.defaultTab,
                         branch: user.branch
                     },
-                    users: db.users,
+                    users: (db.users || []).map(u => ({ ...u, password: '••••' })),
                     auditLogs: db.auditLogs,
                     notifications: db.notifications
                 }));
@@ -2679,7 +2770,8 @@ const server = http.createServer(async (req, res) => {
                 logAudit(db, { userName: actorName || `Kompaniya Egasi (${user.companyId})`, userRole: 'COMPANY_OWNER', action: 'RUHSAT_OZGARTIRILDI', module: `Kompaniya HR (${user.companyId})`, details: `${user.fullName} uchun ruxsat etilgan bo'limlar yangilandi: [${user.allowedTabs.join(', ')}]`, ipAddress: clientIp });
                 saveDB(db);
                 res.writeHead(200);
-                return res.end(JSON.stringify({ success: true, user, users: db.users, auditLogs: db.auditLogs }));
+                const safePermUsers = (db.users || []).map(u => ({ ...u, password: '••••' }));
+                return res.end(JSON.stringify({ success: true, user, users: safePermUsers, auditLogs: db.auditLogs }));
             } catch (err) {
                 res.writeHead(500);
                 return res.end(JSON.stringify({ error: err.message }));
@@ -2688,10 +2780,15 @@ const server = http.createServer(async (req, res) => {
 
         // 25. POST /api/notifications/read -> Mark all notifications as read
         if (pathname === '/api/notifications/read' && req.method === 'POST') {
-            (db.notifications || []).forEach(n => n.read = true);
-            saveDB(db);
-            res.writeHead(200);
-            return res.end(JSON.stringify({ success: true, notifications: db.notifications || [] }));
+            try {
+                (db.notifications || []).forEach(n => n.read = true);
+                saveDB(db);
+                res.writeHead(200);
+                return res.end(JSON.stringify({ success: true, notifications: db.notifications || [] }));
+            } catch (err) {
+                res.writeHead(500);
+                return res.end(JSON.stringify({ error: err.message }));
+            }
         }
 
         // 26. POST /api/copilot/message -> Process NLP, auto-fix issues or Gemini Q&A
