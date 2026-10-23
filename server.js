@@ -247,7 +247,7 @@ const DEFAULT_DB = {
             roleBadge: "👑 Asoschi (Super Admin)",
             industryName: "Asoschi HQ & Ekotizim",
             allowedTabs: ["admin", "dashboard", "kassa", "inventory", "restaurant", "services", "debts", "company", "audit", "profile"],
-            defaultTab: "dashboard",
+            defaultTab: "admin",
             branch: "AZBEK GLOBAL HQ (AZBEK-HQ)"
         },
         {
@@ -571,7 +571,7 @@ function loadDB() {
             if (u.role === 'FOUNDER' || u.username === 'azbek') {
                 u.companyId = 'AZBEK-HQ';
                 u.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
-                u.defaultTab = 'dashboard';
+                u.defaultTab = 'admin';
                 u.roleBadge = '👑 Asoschi (Super Admin)';
                 u.industryName = 'Asoschi HQ & Ekotizim';
                 needsSave = true;

@@ -769,7 +769,7 @@
         "audit",
         "profile"
       ],
-      "defaultTab": "dashboard",
+      "defaultTab": "admin",
       "branch": "AZBEK GLOBAL HQ",
       "companyId": "AZBEK-HQ"
     },

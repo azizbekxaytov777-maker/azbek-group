@@ -2758,12 +2758,12 @@
                     const parsed = JSON.parse(savedUser);
                     if (parsed.role === 'FOUNDER' || parsed.username === 'azbek') {
                         parsed.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
-                        parsed.defaultTab = 'dashboard';
+                        parsed.defaultTab = 'admin';
                     }
                     const freshUser = (AppState.users || []).find(u => u.id === parsed.id || u.username === parsed.username) || parsed;
                     if (freshUser.role === 'FOUNDER' || freshUser.username === 'azbek') {
                         freshUser.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
-                        freshUser.defaultTab = 'dashboard';
+                        freshUser.defaultTab = 'admin';
                     }
                     applyUserSession(freshUser);
                 } catch (e) {
@@ -2911,7 +2911,7 @@
                         companyId: 'AZBEK-CORP',
                         branch: 'Oazis Bosh Filial',
                         allowedTabs: ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'],
-                        defaultTab: 'dashboard'
+                        defaultTab: 'admin'
                     };
                 } else {
                     matchedUser = cachedUsers.find(u =>
@@ -2945,7 +2945,7 @@
         function applyUserSession(user) {
             if (user.role === 'FOUNDER' || user.username === 'azbek') {
                 user.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
-                user.defaultTab = 'dashboard';
+                user.defaultTab = 'admin';
                 user.roleBadge = '👑 Asoschi (Super Admin)';
                 sessionStorage.setItem('azbek_active_user', JSON.stringify(user));
                 localStorage.setItem('azbek_active_user', JSON.stringify(user));
@@ -6464,6 +6464,11 @@
         // ====================================================
         function handleMobileDynamicMiddleTab() {
             const u = AppState.currentUser || {};
+            const isFounder = (u.role === 'FOUNDER' || u.username === 'azbek');
+            if (isFounder) {
+                switchTab('admin');
+                return;
+            }
             const tabs = u.allowedTabs || [];
             if (tabs.includes('restaurant')) switchTab('restaurant');
             else if (tabs.includes('services')) switchTab('services');
@@ -6475,10 +6480,16 @@
 
         function updateMobileNavIcon() {
             const u = AppState.currentUser || {};
-            const tabs = u.allowedTabs || [];
+            const isFounder = (u.role === 'FOUNDER' || u.username === 'azbek');
             const iconEl = document.getElementById('mobileNavDynamicIcon');
             const labelEl = document.getElementById('mobileNavDynamicLabel');
             if (!iconEl || !labelEl) return;
+            if (isFounder) {
+                iconEl.innerText = '👑';
+                labelEl.innerText = 'Asoschi';
+                return;
+            }
+            const tabs = u.allowedTabs || [];
             if (tabs.includes('restaurant')) {
                 iconEl.innerText = '🍽️';
                 labelEl.innerText = 'Restoran';
