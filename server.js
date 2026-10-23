@@ -123,8 +123,8 @@ const DEFAULT_DB = {
     clients: [
         {
             id: "STR-001",
-            name: "Oazis Supermarket (Bosh Do'kon)",
-            industry: "Savdo",
+            name: "Oazis Universal Savdo & Restoran",
+            industry: "Universal Savdo & Xizmat",
             owner: "Alisher Usmonov",
             ownerUsername: "alisher",
             ownerPassword: "7777",
@@ -132,59 +132,11 @@ const DEFAULT_DB = {
             address: "Toshkent sh., Yunusobod 4-mavze",
             status: "ACTIVE",
             monthlyFee: 700000,
-            registeredDate: "2026-09-15",
-            validUntil: "2027-01-14",
-            lastPaymentDate: "2026-10-15",
-            totalPaid: 2800000,
-            lastGeneratedKey: "AZBK-F3D3-58FF-97E5"
-        },
-        {
-            id: "STR-002",
-            name: "Rayhon Milliy Taomlar (Kafe)",
-            industry: "Restoran",
-            owner: "Botir Rahimov",
-            ownerUsername: "botir",
-            ownerPassword: "8888",
-            phone: "+998 97 765-43-21",
-            address: "Toshkent sh., Chilonzor 9-kvartal",
-            status: "ACTIVE",
-            monthlyFee: 700000,
             registeredDate: "2026-10-01",
-            validUntil: "2026-11-01",
+            validUntil: "2027-10-01",
             lastPaymentDate: "2026-10-01",
-            totalPaid: 700000
-        },
-        {
-            id: "STR-003",
-            name: "Grand Mebel Ishlab Chiqarish",
-            industry: "Ishlab chiqarish",
-            owner: "Jahongir To'xtayev",
-            ownerUsername: "jahongir",
-            ownerPassword: "9999",
-            phone: "+998 93 555-11-22",
-            address: "Toshkent viloyati, Zangiota",
-            status: "EXPIRED",
-            monthlyFee: 700000,
-            registeredDate: "2026-08-10",
-            validUntil: "2026-10-10",
-            lastPaymentDate: "2026-09-10",
-            totalPaid: 1400000
-        },
-        {
-            id: "STR-004",
-            name: "Crystal Avtoyuvish & Detailing",
-            industry: "Xizmat",
-            owner: "Sardor Qodirov",
-            ownerUsername: "sardor",
-            ownerPassword: "6666",
-            phone: "+998 99 888-99-00",
-            address: "Toshkent sh., Sergeli",
-            status: "ACTIVE",
-            monthlyFee: 700000,
-            registeredDate: "2026-10-10",
-            validUntil: "2026-11-10",
-            lastPaymentDate: "2026-10-10",
-            totalPaid: 700000
+            totalPaid: 700000,
+            lastGeneratedKey: "AZBK-F3D3-58FF-97E5"
         }
     ],
     // COMPANY-SPECIFIC CUSTOM ROLES (DEFINED BY COMPANY OWNERS FOR THEIR OWN COMPANY ID)
@@ -212,27 +164,9 @@ const DEFAULT_DB = {
             companyId: "STR-001",
             roleCode: "MANAGER",
             roleName: "Do'kon Boshqaruvchisi & Buxgalter",
-            roleBadge: "📊 Menejer & Nasiya CRM",
-            allowedTabs: ["dashboard", "kassa", "inventory", "debts", "profile"],
+            roleBadge: "📊 Menejer & CRM",
+            allowedTabs: ["dashboard", "kassa", "inventory", "restaurant", "debts", "profile"],
             defaultTab: "dashboard"
-        },
-        {
-            id: 4,
-            companyId: "STR-002",
-            roleCode: "WAITER",
-            roleName: "Restoran Ofitsianti",
-            roleBadge: "🍽️ Restoran Ofitsianti",
-            allowedTabs: ["restaurant", "profile"],
-            defaultTab: "restaurant"
-        },
-        {
-            id: 5,
-            companyId: "STR-004",
-            roleCode: "MASTER",
-            roleName: "Moyka / Avtoservis Ustasi",
-            roleBadge: "🚗 Servis Ustasi",
-            allowedTabs: ["services", "profile"],
-            defaultTab: "services"
         }
     ],
     // MULTI-COMPANY & MULTI-ROLE USER ACCOUNTS (SEPARATE LOGINS BOUND TO COMPANY ID)
@@ -248,85 +182,46 @@ const DEFAULT_DB = {
             industryName: "Asoschi HQ & Ekotizim",
             allowedTabs: ["admin", "dashboard", "kassa", "inventory", "restaurant", "services", "debts", "company", "audit", "profile"],
             defaultTab: "admin",
-            branch: "AZBEK GLOBAL HQ (AZBEK-HQ)"
-        },
-        {
-            id: 6,
-            companyId: "STR-001",
-            username: "alisher",
-            password: "7777",
-            fullName: "Alisher Usmonov (Oazis Supermarket Egasi)",
-            role: "COMPANY_OWNER",
-            roleBadge: "🏢 Kompaniya Egasi (STR-001)",
-            industryName: "Savdo / Supermarket",
-            allowedTabs: ["company", "dashboard", "kassa", "inventory", "debts", "audit", "profile"],
-            defaultTab: "company",
-            branch: "Oazis Supermarket (STR-001)"
-        },
-        {
-            id: 7,
-            companyId: "STR-002",
-            username: "botir",
-            password: "8888",
-            fullName: "Botir Rahimov (Rayhon Milliy Taomlar Egasi)",
-            role: "COMPANY_OWNER",
-            roleBadge: "🏢 Kompaniya Egasi (STR-002)",
-            industryName: "Restoran / Kafe",
-            allowedTabs: ["company", "dashboard", "restaurant", "inventory", "debts", "audit", "profile"],
-            defaultTab: "company",
-            branch: "Rayhon Milliy Taomlar (STR-002)"
+            branch: "AZBEK GLOBAL HQ"
         },
         {
             id: 2,
             companyId: "STR-001",
-            username: "kassir",
-            password: "1111",
-            fullName: "Sardor Kassir (Savdo / Do'kon)",
-            role: "CASHIER",
-            roleBadge: "🛒 Do'kon Kassiri",
-            industryName: "Savdo / Supermarket",
-            allowedTabs: ["kassa", "inventory", "debts", "profile"],
-            defaultTab: "kassa",
-            branch: "Oazis Supermarket (STR-001)"
+            username: "alisher",
+            password: "7777",
+            fullName: "Alisher Usmonov (Oazis Egasi)",
+            role: "COMPANY_OWNER",
+            roleBadge: "🏢 Kompaniya Egasi (STR-001)",
+            industryName: "Universal Savdo & Restoran",
+            allowedTabs: ["company", "dashboard", "kassa", "inventory", "restaurant", "services", "debts", "audit", "profile"],
+            defaultTab: "company",
+            branch: "Oazis Universal (STR-001)"
         },
         {
             id: 3,
-            companyId: "STR-002",
-            username: "restoran",
-            password: "2222",
-            fullName: "Jasmina Ofitsiant (Restoran / Kafe)",
-            role: "WAITER",
-            roleBadge: "🍽️ Restoran & Kafe",
-            industryName: "Restoran / Oshxona",
-            allowedTabs: ["restaurant", "profile"],
-            defaultTab: "restaurant",
-            branch: "Rayhon Milliy Taomlar (STR-002)"
+            companyId: "STR-001",
+            username: "kassir",
+            password: "1111",
+            fullName: "Sardor Kassir (Chakana Savdo)",
+            role: "CASHIER",
+            roleBadge: "🛒 Do'kon Kassiri",
+            industryName: "Savdo / Kassa",
+            allowedTabs: ["kassa", "inventory", "debts", "profile"],
+            defaultTab: "kassa",
+            branch: "Oazis Universal (STR-001)"
         },
         {
             id: 4,
-            companyId: "STR-004",
-            username: "moyka",
-            password: "3333",
-            fullName: "Rustam Usta (Moyka / Avtoservis / Ustaxona)",
-            role: "MASTER",
-            roleBadge: "🚗 Xizmatlar & Ustaxona",
-            industryName: "Xizmat ko'rsatish & Ustaxona",
-            allowedTabs: ["services", "profile"],
-            defaultTab: "services",
-            branch: "Crystal Avtoyuvish (STR-004)"
-        },
-        {
-            id: 5,
             companyId: "STR-001",
             username: "menejer",
             password: "4444",
-            fullName: "Dilshod Boshqaruvchi (Buxgalter / CRM)",
+            fullName: "Dilshod Boshqaruvchi (Menejer & CRM)",
             role: "MANAGER",
-            roleBadge: "📊 Menejer & Nasiya CRM",
+            roleBadge: "📊 Menejer & CRM",
             industryName: "Boshqaruv va Hisobot",
-            allowedTabs: ["dashboard", "kassa", "inventory", "debts", "profile"],
+            allowedTabs: ["dashboard", "kassa", "inventory", "restaurant", "debts", "profile"],
             defaultTab: "dashboard",
-            branch: "Oazis Supermarket (STR-001)"
+            branch: "Oazis Universal (STR-001)"
         }
     ],
     // SALES HISTORY
