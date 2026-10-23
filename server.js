@@ -11,6 +11,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const cloudDb = require('./database');
 
 const PORT = process.env.PORT || 5000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -635,6 +636,9 @@ function saveDB(data) {
         fs.writeFileSync(tmp, jsonStr, 'utf-8');
         fs.renameSync(tmp, DB_FILE);
         fs.writeFileSync(backup, jsonStr, 'utf-8');
+        if (typeof cloudDb !== 'undefined' && cloudDb && typeof cloudDb.scheduleCloudSync === 'function') {
+            cloudDb.scheduleCloudSync(data);
+        }
         return true;
     } catch (e) {
         return false;
@@ -1466,6 +1470,26 @@ const server = http.createServer(async (req, res) => {
                 users: safeUsers,
                 settings: safeSettings 
             }));
+            return;
+        }
+
+        // GET /api/database/status -> Cloud Database Connection Status (MongoDB Atlas / Supabase / Local)
+        if (pathname === '/api/database/status' && req.method === 'GET') {
+            res.writeHead(200);
+            res.end(JSON.stringify({ success: true, ...cloudDb.getStatus() }));
+            return;
+        }
+
+        // POST /api/database/sync -> Force manual cloud sync
+        if (pathname === '/api/database/sync' && req.method === 'POST') {
+            const isFounder = isFounderAuthorized(req);
+            if (!isFounder) {
+                res.writeHead(403);
+                return res.end(JSON.stringify({ success: false, error: "Faqat Asoschi bulutli bazani qo'lda sinxronlashi mumkin!" }));
+            }
+            cloudDb.scheduleCloudSync(db);
+            res.writeHead(200);
+            res.end(JSON.stringify({ success: true, message: "Bulutli baza bilan sinxronlash boshlandi", status: cloudDb.getStatus() }));
             return;
         }
 
@@ -2940,4 +2964,12 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`🔒 DRM Oylik To'lov: 700 000 UZS (Oflayn HMAC-SHA256)`);
     console.log(`📲 Google Play & App Store PWA/Capacitor tayyor`);
     console.log(`=======================================================`);
+
+    // Bulutli bazaga ulanish (MongoDB Atlas yoki Supabase)
+    cloudDb.init(loadDB(), (cloudData) => {
+        saveDB(cloudData);
+        console.log('🔄 [CLOUD SYNC] Mahalliy baza bulutdagi so\'nggi holat bilan sinxronlandi.');
+    }).catch(e => {
+        console.warn('⚠️ [CLOUD DB] Baza initsializatsiyasida ogohlantirish:', e.message);
+    });
 });

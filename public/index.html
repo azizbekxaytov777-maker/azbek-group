@@ -1220,6 +1220,54 @@
                 </div>
             </div>
 
+            <!-- Cloud Database Integration (MongoDB Atlas & Supabase) -->
+            <div class="bg-obsidian-900 border border-cyan-500/40 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-obsidian-800">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">☁️</span>
+                        <div>
+                            <h3 class="text-sm font-bold text-white">Bulutli Baza (MongoDB Atlas & Supabase)</h3>
+                            <p class="text-[11px] text-slate-400">Server qayta yonsa ham ma'lumotlar yo'qolmasligi va o'z serveringizga ko'chirish markazi</p>
+                        </div>
+                    </div>
+                    <div id="cloudDbBadge" class="px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                        <span id="cloudDbStatusText">Lokal Baza (JSON)</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                    <div class="bg-obsidian-850 p-3 rounded-xl border border-obsidian-750">
+                        <span class="text-slate-400 text-[10px] block uppercase font-bold tracking-wider">Faol Provayder:</span>
+                        <strong class="text-white text-xs truncate block" id="cloudDbProviderName">Lokal Fayl (data/azbek_db.json)</strong>
+                    </div>
+                    <div class="bg-obsidian-850 p-3 rounded-xl border border-obsidian-750">
+                        <span class="text-slate-400 text-[10px] block uppercase font-bold tracking-wider">Oxirgi Bulut Sinxroni:</span>
+                        <strong class="text-slate-200 text-xs block" id="cloudDbLastSync">Hali amalga oshirilmadi</strong>
+                    </div>
+                    <div class="bg-obsidian-850 p-3 rounded-xl border border-obsidian-750 flex items-center justify-between">
+                        <div>
+                            <span class="text-slate-400 text-[10px] block uppercase font-bold tracking-wider">Bulutga Zaxiralash:</span>
+                            <span class="text-[11px] text-slate-300">Tezkor saqlash</span>
+                        </div>
+                        <button onclick="triggerManualCloudSync()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition shadow active:scale-95 flex items-center gap-1">
+                            <span>🔄</span> <span>Sinxronlash</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info banner on connecting -->
+                <div class="bg-cyan-950/30 border border-cyan-600/30 rounded-xl p-3 text-xs text-cyan-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <span>💡</span>
+                        <span>MongoDB Atlas yoki Supabase ulanishi uchun Render boshqaruv panelida <b>MONGODB_URI</b> yoki <b>SUPABASE_URL</b> o'zgaruvchisini kiritish kifoya.</span>
+                    </div>
+                    <button onclick="openCloudDbHelpModal()" class="px-2.5 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg text-[11px] font-bold shrink-0">
+                        📖 Ulanish & Ko'chirish Qo'llanmasi
+                    </button>
+                </div>
+            </div>
+
             <!-- Multi-User Login Management (Every Person & Industry) -->
             <div class="bg-obsidian-900 border border-gold-500/30 rounded-2xl p-4 shadow-xl space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-obsidian-800">
@@ -2177,6 +2225,80 @@
             <div class="flex gap-2">
                 <button onclick="closeFounderPinModal()" class="flex-1 py-2.5 bg-obsidian-800 text-slate-300 font-bold text-xs rounded-xl">Bekor qilish</button>
                 <button onclick="verifyFounderPin()" class="flex-1 py-2.5 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-black text-xs rounded-xl shadow">Kirish ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- MODAL: CLOUD DATABASE (MONGODB ATLAS & SUPABASE) HELP -->
+    <!-- ==================================================== -->
+    <div id="cloudDbHelpModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-obsidian-900 border border-cyan-500/50 rounded-3xl p-5 sm:p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-4">
+            <div class="flex justify-between items-center pb-3 border-b border-obsidian-800">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">☁️</span>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-black text-white">Bulutli Baza & O'z Serveringizga Ko'chirish Qo'llanmasi</h3>
+                        <p class="text-[11px] text-slate-400">MongoDB Atlas, Supabase va Mustaqil Server Bo'yicha Boshqaruv</p>
+                    </div>
+                </div>
+                <button onclick="closeCloudDbHelpModal()" class="w-8 h-8 rounded-full bg-obsidian-800 text-slate-400 hover:text-white flex items-center justify-center text-xs font-bold cursor-pointer">✕</button>
+            </div>
+
+            <div class="space-y-4 text-xs text-slate-300">
+                <!-- Section 1: MongoDB Atlas -->
+                <div class="p-3.5 bg-obsidian-850 border border-emerald-500/30 rounded-2xl space-y-2">
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                        <span>🍃</span> <span>1. MongoDB Atlas ga Ulanish (Eng Zo'r & 100% Mos Yechim)</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Bizning super-ilovamiz hujjatli tuzilmaga (JSON) asoslangan, shuning uchun MongoDB Atlas unga 1:1 mukammal tushadi. Bepul 512 MB beradi (100,000 ta tovar va 500,000 ta chek sig'adi).</p>
+                    <div class="bg-obsidian-950 p-2.5 rounded-xl font-mono text-[11px] text-emerald-300 border border-obsidian-750">
+                        1. mongodb.com ga kiring va bepul "M0 Cluster" oching<br>
+                        2. "Database Access" bo'limida foydalanuvchi va parol yarating<br>
+                        3. "Network Access" bo'limida 0.0.0.0/0 (hamma joydan ulanish) ruxsatini bering<br>
+                        4. "Connect" ➔ "Drivers" dan ulanish havolasini oling:<br>
+                        <span class="text-white">mongodb+srv://foydalanuvchi:parol@cluster0.mongodb.net/azbek_superapp</span><br>
+                        5. Render.com dagi ilovangiz ➔ <b>Environment Variables</b> bo'limiga:<br>
+                        <b>Key:</b> <span class="text-gold-400">MONGODB_URI</span><br>
+                        <b>Value:</b> <span class="text-gold-400">mongodb+srv://...</span> deb saqlang!
+                    </div>
+                </div>
+
+                <!-- Section 2: Supabase -->
+                <div class="p-3.5 bg-obsidian-850 border border-cyan-500/30 rounded-2xl space-y-2">
+                    <div class="flex items-center gap-2 text-cyan-400 font-bold text-sm">
+                        <span>⚡</span> <span>2. Supabase (PostgreSQL) ga Ulanish</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Supabase — bu kuchli bulutli PostgreSQL ma'lumotlar bazasi platformasi.</p>
+                    <div class="bg-obsidian-950 p-2.5 rounded-xl font-mono text-[11px] text-cyan-300 border border-obsidian-750">
+                        1. supabase.com ga kirib yangi bepul loyiha (Project) oching<br>
+                        2. "Project Settings" ➔ "API" bo'limiga kiring<br>
+                        3. Render boshqaruv panelida 2 ta o'zgaruvchi qo'shing:<br>
+                        <b>SUPABASE_URL</b> = <span class="text-white">https://xxxx.supabase.co</span><br>
+                        <b>SUPABASE_KEY</b> = <span class="text-white">eyJh... (anon yoki service_role key)</span>
+                    </div>
+                </div>
+
+                <!-- Section 3: Own Server Migration -->
+                <div class="p-3.5 bg-obsidian-850 border border-gold-500/40 rounded-2xl space-y-2">
+                    <div class="flex items-center gap-2 text-gold-400 font-bold text-sm">
+                        <span>💻</span> <span>3. O'z Serveringizni Olsangiz Baza Ham O'tadimi?</span>
+                    </div>
+                    <p class="leading-relaxed text-slate-200">
+                        <b>HA, 100% O'TADI!</b> Ilovamiz toza Node.js va Universal Baza drayveriga ega bo'lgani sababli:
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                        <li><strong class="text-white">Ilovani o'tkazish:</strong> O'z serveringizga (VPS yoki do'kondagi kompyuterga) GitHub'dan fayllarni ko'chirib, <code class="text-gold-400">node server.js</code> ni ishga tushirsangiz kifoya.</li>
+                        <li><strong class="text-white">Bulutli bazani ko'chirish:</strong> MongoDB Atlas bulutidagi ma'lumotlarni 1 ta buyruq (<code class="text-emerald-400">mongodump</code>) orqali fayl qilib yuklab olasiz va o'z serveringizga o'rnatilgan lokal MongoDB'ga tiklaysiz (<code class="text-emerald-400">mongorestore</code>). Shunda bulutdan butunlay uzilib, 100% o'zingizda ishlaydi!</li>
+                        <li><strong class="text-white">Gibrid rejim:</strong> Yoki dastur o'z kompyuteringizda turib, baza bulutda qolishi ham mumkin — bu kompyuteringiz buzilib qolsa ham tovarlaringiz yo'qolmasligini kafolatlaydi!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeCloudDbHelpModal()" class="px-5 py-2.5 bg-gold-500 hover:bg-gold-400 text-obsidian-950 font-bold text-xs rounded-xl shadow transition">
+                    Tushundim, Rahmat!
+                </button>
             </div>
         </div>
     </div>
@@ -4175,6 +4297,82 @@
             window.open(`https://t.me/share/url?url=&text=${msg}`, '_blank');
         }
 
+        // =====================================================
+        // CLOUD DATABASE INTEGRATION (MONGODB ATLAS & SUPABASE)
+        // =====================================================
+        async function fetchDatabaseStatus() {
+            try {
+                const res = await fetch('/api/database/status');
+                const data = await res.json();
+                if (data.success) {
+                    renderDatabaseStatus(data);
+                }
+            } catch (e) {
+                console.warn('DB status olishda xato:', e);
+            }
+        }
+
+        function renderDatabaseStatus(st) {
+            const badge = document.getElementById('cloudDbBadge');
+            const txt = document.getElementById('cloudDbStatusText');
+            const prov = document.getElementById('cloudDbProviderName');
+            const sync = document.getElementById('cloudDbLastSync');
+            if (!badge || !txt || !prov || !sync) return;
+
+            if (st.provider === 'MONGODB' && st.connected) {
+                badge.className = "px-2.5 py-1 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5";
+                txt.innerText = "🟢 MongoDB Atlas (Faol)";
+                prov.innerText = `🍃 MongoDB Atlas (${st.details ? st.details.mongoMasked : 'Ulangan'})`;
+            } else if (st.provider === 'SUPABASE' && st.connected) {
+                badge.className = "px-2.5 py-1 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5";
+                txt.innerText = "🟢 Supabase (Faol)";
+                prov.innerText = `⚡ Supabase (${st.details ? st.details.supabaseMasked : 'Ulangan'})`;
+            } else {
+                badge.className = "px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5";
+                txt.innerText = "🟡 Lokal Baza (data/azbek_db.json)";
+                prov.innerText = "📁 Mahalliy JSON Fayl";
+            }
+
+            if (st.lastSyncTime) {
+                sync.innerText = new Date(st.lastSyncTime).toLocaleTimeString('uz-UZ') + ' (Saqlangan)';
+            } else {
+                sync.innerText = "Kutilmoqda / Avto";
+            }
+        }
+
+        async function triggerManualCloudSync() {
+            try {
+                const pin = AppState.founderPin || '2026';
+                const res = await fetch('/api/database/sync', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-Founder-Pin': pin
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('✅ Bulutli baza bilan sinxronizatsiya muvaffaqiyatli amalga oshirildi!');
+                    renderDatabaseStatus(data.status);
+                    playSuccessSound();
+                } else {
+                    alert('Xatolik: ' + (data.error || 'Noma\'lum xato'));
+                }
+            } catch (e) {
+                alert('Xato: ' + e.message);
+            }
+        }
+
+        function openCloudDbHelpModal() {
+            const m = document.getElementById('cloudDbHelpModal');
+            if (m) m.classList.remove('hidden');
+        }
+
+        function closeCloudDbHelpModal() {
+            const m = document.getElementById('cloudDbHelpModal');
+            if (m) m.classList.add('hidden');
+        }
+
         function detectCompanyIndustry(val) {
             const text = String(val || '').toLowerCase();
             const labelEl = document.getElementById('industryDetectLabel');
@@ -5505,6 +5703,7 @@
             renderAuditLogs();
             renderProfileView();
             renderNotifications();
+            fetchDatabaseStatus();
         }
 
         // =====================================================
