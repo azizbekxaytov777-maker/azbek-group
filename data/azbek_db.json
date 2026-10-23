@@ -760,10 +760,16 @@
       "allowedTabs": [
         "admin",
         "dashboard",
+        "kassa",
+        "inventory",
+        "restaurant",
+        "services",
+        "debts",
+        "company",
         "audit",
         "profile"
       ],
-      "defaultTab": "admin",
+      "defaultTab": "dashboard",
       "branch": "AZBEK GLOBAL HQ",
       "companyId": "AZBEK-HQ"
     },

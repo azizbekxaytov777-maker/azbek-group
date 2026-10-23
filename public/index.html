@@ -1256,13 +1256,30 @@
                     </div>
                 </div>
 
+                <!-- Direct In-App Cloud Database Connection Input -->
+                <div class="p-3.5 bg-obsidian-850/90 border border-cyan-500/30 rounded-xl space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>⚡</span> <span>Bulutli Baza Ulanish Havolasi (URI):</span>
+                        </span>
+                        <span class="text-[10px] text-slate-400">MongoDB Atlas yoki PostgreSQL</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="inputCloudDbUri" placeholder="mongodb+srv://foydalanuvchi:parol@cluster0.abcde.mongodb.net/azbek_superapp" class="flex-1 bg-obsidian-900 border border-obsidian-700 rounded-xl px-3 py-2 text-xs text-white font-mono placeholder:text-slate-500 outline-none focus:border-cyan-500">
+                        <button onclick="saveAndConnectCloudDb()" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-obsidian-950 font-black text-xs rounded-xl shadow active:scale-95 transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
+                            <span>🚀</span> <span>Ulash & Faollashtirish</span>
+                        </button>
+                    </div>
+                    <div id="cloudDbConnectMsg" class="hidden text-[11px] font-semibold"></div>
+                </div>
+
                 <!-- Info banner on connecting -->
                 <div class="bg-cyan-950/30 border border-cyan-600/30 rounded-xl p-3 text-xs text-cyan-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div class="flex items-center gap-2">
                         <span>💡</span>
-                        <span>MongoDB Atlas yoki Supabase ulanishi uchun Render boshqaruv panelida <b>MONGODB_URI</b> yoki <b>SUPABASE_URL</b> o'zgaruvchisini kiritish kifoya.</span>
+                        <span>MongoDB Atlas yoki Supabase ulanishi uchun yuqoridagi maydonga ulanish havolasini yozib <b>"Ulash & Faollashtirish"</b> tugmasini bosing.</span>
                     </div>
-                    <button onclick="openCloudDbHelpModal()" class="px-2.5 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg text-[11px] font-bold shrink-0">
+                    <button onclick="openCloudDbHelpModal()" class="px-2.5 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg text-[11px] font-bold shrink-0 cursor-pointer">
                         📖 Ulanish & Ko'chirish Qo'llanmasi
                     </button>
                 </div>
@@ -2739,7 +2756,15 @@
             if (savedUser) {
                 try {
                     const parsed = JSON.parse(savedUser);
+                    if (parsed.role === 'FOUNDER' || parsed.username === 'azbek') {
+                        parsed.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
+                        parsed.defaultTab = 'dashboard';
+                    }
                     const freshUser = (AppState.users || []).find(u => u.id === parsed.id || u.username === parsed.username) || parsed;
+                    if (freshUser.role === 'FOUNDER' || freshUser.username === 'azbek') {
+                        freshUser.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
+                        freshUser.defaultTab = 'dashboard';
+                    }
                     applyUserSession(freshUser);
                 } catch (e) {
                     console.warn('Sessiyani tiklashda xato:', e);
@@ -2885,8 +2910,8 @@
                         roleBadge: '👑 Asoschi (Super Admin)',
                         companyId: 'AZBEK-CORP',
                         branch: 'Oazis Bosh Filial',
-                        allowedTabs: ['admin', 'dashboard', 'audit', 'profile'],
-                        defaultTab: 'admin'
+                        allowedTabs: ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'],
+                        defaultTab: 'dashboard'
                     };
                 } else {
                     matchedUser = cachedUsers.find(u =>
@@ -2919,8 +2944,8 @@
 
         function applyUserSession(user) {
             if (user.role === 'FOUNDER' || user.username === 'azbek') {
-                user.allowedTabs = ['admin', 'dashboard', 'audit', 'profile'];
-                user.defaultTab = 'admin';
+                user.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
+                user.defaultTab = 'dashboard';
                 user.roleBadge = '👑 Asoschi (Super Admin)';
                 sessionStorage.setItem('azbek_active_user', JSON.stringify(user));
                 localStorage.setItem('azbek_active_user', JSON.stringify(user));
@@ -3040,9 +3065,9 @@
         // TAB SWITCHER & ROLE PERMISSION GUARD
         // =====================================================
         function switchTab(tabName) {
-            if (AppState.currentUser && AppState.currentUser.allowedTabs) {
-                const isFounderInspecting = (AppState.currentUser.role === 'FOUNDER' && tabName === 'company');
-                if (!AppState.currentUser.allowedTabs.includes(tabName) && tabName !== 'profile' && !isFounderInspecting) {
+            const isFounder = (AppState.currentUser && (AppState.currentUser.role === 'FOUNDER' || AppState.currentUser.username === 'azbek'));
+            if (!isFounder && AppState.currentUser && AppState.currentUser.allowedTabs) {
+                if (!AppState.currentUser.allowedTabs.includes(tabName) && tabName !== 'profile') {
                     alert("⛔ Sizning loginingiz (" + AppState.currentUser.roleBadge + ") ushbu bo'limga kirish huquqiga ega emas!");
                     return;
                 }
@@ -4371,6 +4396,50 @@
         function closeCloudDbHelpModal() {
             const m = document.getElementById('cloudDbHelpModal');
             if (m) m.classList.add('hidden');
+        }
+
+        async function saveAndConnectCloudDb() {
+            const input = document.getElementById('inputCloudDbUri');
+            const msg = document.getElementById('cloudDbConnectMsg');
+            if (!input || !msg) return;
+            const uri = input.value.trim();
+            if (!uri) {
+                msg.innerText = "Iltimos, MongoDB yoki PostgreSQL ulanish havolasini kiriting!";
+                msg.className = "text-[11px] font-semibold text-rose-400";
+                msg.classList.remove('hidden');
+                return;
+            }
+
+            msg.innerText = "Bulutli bazaga ulanish tekshirilmoqda...";
+            msg.className = "text-[11px] font-semibold text-amber-300 animate-pulse";
+            msg.classList.remove('hidden');
+
+            try {
+                const pin = AppState.founderPin || '2026';
+                const res = await fetch('/api/database/connect', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-Founder-Pin': pin
+                    },
+                    body: JSON.stringify({ uri })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    msg.innerText = "✅ " + data.message;
+                    msg.className = "text-[11px] font-semibold text-emerald-400";
+                    renderDatabaseStatus(data.status);
+                    playSuccessSound();
+                    alert("🎉 Tabriklaymiz! Bulutli baza muvaffaqiyatli ishga tushdi va barcha ma'lumotlar bulutga saqlandi!");
+                } else {
+                    msg.innerText = "❌ Ulanish xatosi: " + (data.error || "Noma'lum xato");
+                    msg.className = "text-[11px] font-semibold text-rose-400";
+                    playBeep(220, 150);
+                }
+            } catch (e) {
+                msg.innerText = "❌ Tarmoq xatosi: " + e.message;
+                msg.className = "text-[11px] font-semibold text-rose-400";
+            }
         }
 
         function detectCompanyIndustry(val) {

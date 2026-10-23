@@ -246,8 +246,8 @@ const DEFAULT_DB = {
             role: "FOUNDER",
             roleBadge: "👑 Asoschi (Super Admin)",
             industryName: "Asoschi HQ & Ekotizim",
-            allowedTabs: ["admin", "company", "dashboard", "audit", "profile"],
-            defaultTab: "admin",
+            allowedTabs: ["admin", "dashboard", "kassa", "inventory", "restaurant", "services", "debts", "company", "audit", "profile"],
+            defaultTab: "dashboard",
             branch: "AZBEK GLOBAL HQ (AZBEK-HQ)"
         },
         {
@@ -570,8 +570,8 @@ function loadDB() {
         data.users.forEach(u => {
             if (u.role === 'FOUNDER' || u.username === 'azbek') {
                 u.companyId = 'AZBEK-HQ';
-                u.allowedTabs = ['admin', 'dashboard', 'audit', 'profile'];
-                u.defaultTab = 'admin';
+                u.allowedTabs = ['admin', 'dashboard', 'kassa', 'inventory', 'restaurant', 'services', 'debts', 'company', 'audit', 'profile'];
+                u.defaultTab = 'dashboard';
                 u.roleBadge = '👑 Asoschi (Super Admin)';
                 u.industryName = 'Asoschi HQ & Ekotizim';
                 needsSave = true;
@@ -1490,6 +1490,26 @@ const server = http.createServer(async (req, res) => {
             cloudDb.scheduleCloudSync(db);
             res.writeHead(200);
             res.end(JSON.stringify({ success: true, message: "Bulutli baza bilan sinxronlash boshlandi", status: cloudDb.getStatus() }));
+            return;
+        }
+
+        // POST /api/database/connect -> Live connect to MongoDB Atlas or PostgreSQL
+        if (pathname === '/api/database/connect' && req.method === 'POST') {
+            const isFounder = isFounderAuthorized(req);
+            if (!isFounder) {
+                res.writeHead(403);
+                return res.end(JSON.stringify({ success: false, error: "Faqat Asoschi bulutli bazani ulashi mumkin!" }));
+            }
+            try {
+                const body = await parseBody(req);
+                const { uri } = body;
+                const result = await cloudDb.testAndConnect(uri, db);
+                res.writeHead(200);
+                res.end(JSON.stringify({ success: true, ...result, status: cloudDb.getStatus() }));
+            } catch (err) {
+                res.writeHead(400);
+                res.end(JSON.stringify({ success: false, error: err.message }));
+            }
             return;
         }
 
