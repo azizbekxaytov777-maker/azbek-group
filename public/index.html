@@ -4166,8 +4166,22 @@
         function sendDebtReminder(custId) {
             const cust = AppState.customers.find(c => c.id === custId);
             if (!cust) return;
-            const text = encodeURIComponent(`Assalomu alaykum hurmatli ${cust.name}! AZBEK do'koni hisobingizda ${formatMoney(cust.debt)} qarzdorlik mavjud. Iltimos o'z vaqtida so'ndirishingizni so'raymiz. Rahmat!`);
-            window.open(`https://t.me/share/url?url=&text=${text}`, '_blank');
+            const storeName = AppState.settings?.storeName || 'AZBEK';
+            const rawMsg = `Assalomu alaykum hurmatli ${cust.name}! ${storeName} do'koni hisobingizda ${formatMoney(cust.debt)} qarzdorlik mavjud. Iltimos o'z vaqtida so'ndirishingizni so'raymiz. Rahmat!`;
+            const encoded = encodeURIComponent(rawMsg);
+            const cleanPhone = String(cust.phone || '').replace(/[^0-9+]/g, '');
+
+            const choice = confirm(`📩 Mijoz: ${cust.name}\nQarz: ${formatMoney(cust.debt)}\n\n"OK" — Telegram orqali eslatma yuborish\n"Otmena (Cancel)" — SMS orqali yuborish`);
+            if (choice) {
+                window.open(`https://t.me/share/url?url=&text=${encoded}`, '_blank');
+            } else {
+                if (cleanPhone) {
+                    window.location.href = `sms:${cleanPhone}?body=${encoded}`;
+                } else {
+                    navigator.clipboard?.writeText(rawMsg);
+                    alert("✅ Eslatma matni nusxalandi:\n\n" + rawMsg);
+                }
+            }
         }
 
         // =====================================================
