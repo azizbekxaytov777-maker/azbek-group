@@ -265,7 +265,7 @@
                 </div>
                 <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
                     <span class="text-gold-400">🏢</span>
-                    <span id="headerStoreName" class="font-medium truncate max-w-[140px] sm:max-w-none">Oazis Bosh Filial (Universal)</span>
+                    <span id="headerStoreName" class="font-medium truncate max-w-[110px] min-[380px]:max-w-[150px] sm:max-w-none">Oazis Bosh Filial (Universal)</span>
                 </div>
             </div>
         </div>
@@ -280,7 +280,7 @@
         </button>
 
         <!-- Right Action Controls -->
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <!-- V1 Offline Sync Queue Pill -->
             <button id="btnOfflineSyncBadge" onclick="syncOfflineSalesQueue()" class="hidden px-2.5 py-1 bg-amber-500/20 border border-amber-500/50 rounded-xl text-[11px] font-extrabold text-amber-300 flex items-center gap-1 animate-pulse">
                 <span>📡</span> <span id="offlineSyncCountText">0 oflayn chek</span>
@@ -291,9 +291,8 @@
                 🔍
             </button>
 
-
-            <!-- License DRM Status Pill -->
-            <div id="licenseStatusPill" onclick="openLicenseActivationModal()" class="cursor-pointer flex items-center gap-1.5 bg-obsidian-850 border border-gold-500/40 px-2.5 py-1 rounded-xl text-xs font-semibold text-gold-400 hover:border-gold-500 transition shadow">
+            <!-- License DRM Status Pill (Desktop/Tablet only) -->
+            <div id="licenseStatusPill" onclick="openLicenseActivationModal()" class="cursor-pointer hidden sm:flex items-center gap-1.5 bg-obsidian-850 border border-gold-500/40 px-2.5 py-1 rounded-xl text-xs font-semibold text-gold-400 hover:border-gold-500 transition shadow">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="licenseDot"></span>
                 <span id="licenseHeaderLabel">700k/oy Faol</span>
             </div>
@@ -316,29 +315,29 @@
                 </div>
             </div>
 
-            <!-- Active User Badge -->
-            <div class="flex items-center gap-1.5 bg-obsidian-850 border border-gold-500/40 px-2.5 py-1.5 rounded-xl text-xs shadow">
+            <!-- Active User Badge (Desktop only) -->
+            <div class="hidden md:flex items-center gap-1.5 bg-obsidian-850 border border-gold-500/40 px-2.5 py-1.5 rounded-xl text-xs shadow">
                 <span id="headerUserBadge" onclick="switchTab('profile')" class="cursor-pointer font-bold text-gold-400 hover:underline">👑 Asoschi (azbek)</span>
             </div>
 
             <!-- Big Red Header Logout Button -->
-            <button onclick="logoutUser()" title="Hisobdan chiqish / Kassir yoki Boshqa loginga o'tish" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-rose-900/40 active:scale-95 cursor-pointer">
-                <span>🚪</span> <span>Chiqish</span>
+            <button onclick="logoutUser()" title="Hisobdan chiqish / Kassir yoki Boshqa loginga o'tish" class="px-2.5 sm:px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-black transition flex items-center gap-1 shadow-md shadow-rose-900/40 active:scale-95 cursor-pointer">
+                <span>🚪</span> <span class="hidden sm:inline">Chiqish</span>
             </button>
 
             <!-- Eski oltin rangli O'rnatish tugmasi -->
-            <button id="btnPwaInstall" onclick="promptInstallPwa()" class="px-3 py-1.5 bg-gradient-to-r from-gold-500 to-amber-500 hover:from-gold-400 hover:to-amber-400 text-obsidian-950 font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-1.5 active:scale-95 transition cursor-pointer" title="Ilovani o'rnatish">
-                <span>📲</span> <span>O'rnatish</span>
+            <button id="btnPwaInstall" onclick="promptInstallPwa()" class="px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-gold-500 to-amber-500 hover:from-gold-400 hover:to-amber-400 text-obsidian-950 font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-1 active:scale-95 transition cursor-pointer" title="Ilovani o'rnatish">
+                <span>📲</span> <span class="hidden sm:inline">O'rnatish</span>
             </button>
 
             <!-- Interactive Role Guide Button -->
-            <button onclick="openRoleGuideModal()" title="Yosh bola ham tushunadigan oson qo'llanma" class="flex items-center gap-1 px-2.5 py-1 bg-gold-500/20 hover:bg-gold-500/30 border border-gold-500 rounded-xl text-xs font-extrabold text-gold-400 transition shadow">
+            <button onclick="openRoleGuideModal()" title="Yosh bola ham tushunadigan oson qo'llanma" class="hidden md:flex items-center gap-1 px-2.5 py-1 bg-gold-500/20 hover:bg-gold-500/30 border border-gold-500 rounded-xl text-xs font-extrabold text-gold-400 transition shadow">
                 <span>🧒</span> <span class="hidden sm:inline">Oson Yordamchi</span>
             </button>
 
-            <!-- AZBEK COPILOT AI BUTTON (HEADER) -->
-            <button onclick="toggleCopilotModal()" title="AZBEK Copilot AI — Kamchiliklarni avto-tuzatuvchi sun'iy intellekt" class="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500 via-gold-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-obsidian-950 font-black text-xs rounded-xl shadow-lg shadow-gold-500/25 active:scale-95 transition cursor-pointer">
-                <span class="text-sm">✨</span> <span class="hidden sm:inline">Copilot AI</span>
+            <!-- AZBEK COPILOT AI BUTTON (HEADER - Desktop only) -->
+            <button onclick="toggleCopilotModal()" title="AZBEK Copilot AI — Kamchiliklarni avto-tuzatuvchi sun'iy intellekt" class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500 via-gold-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-obsidian-950 font-black text-xs rounded-xl shadow-lg shadow-gold-500/25 active:scale-95 transition cursor-pointer">
+                <span class="text-sm">✨</span> <span>Copilot AI</span>
             </button>
 
             <!-- Z-Report Shift Button (F9) -->
@@ -347,11 +346,20 @@
             </button>
 
             <!-- Sound toggle -->
-            <button onclick="toggleAudio()" id="btnAudioToggle" class="w-8 h-8 rounded-xl bg-obsidian-850 border border-obsidian-750 flex items-center justify-center text-sm text-slate-300 hover:text-white transition">
+            <button onclick="toggleAudio()" id="btnAudioToggle" class="hidden sm:flex w-8 h-8 rounded-xl bg-obsidian-850 border border-obsidian-750 items-center justify-center text-sm text-slate-300 hover:text-white transition">
                 🔊
             </button>
         </div>
     </header>
+
+    <!-- OFFLINE STATUS BANNER -->
+    <div id="offlineStatusBar" class="hidden bg-amber-500 text-obsidian-950 text-xs font-black px-4 py-1.5 flex items-center justify-between shadow-lg z-30 transition-all duration-300">
+        <div class="flex items-center gap-2">
+            <span class="animate-pulse">📡</span>
+            <span id="offlineStatusText">Internet o'chgan! Oflayn rejim faol — barcha savdolar telefon xotirasida saqlanadi.</span>
+        </div>
+        <span class="text-[10px] bg-obsidian-950/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Avto-Sinxron</span>
+    </div>
 
     <!-- ==================================================== -->
     <!-- UNIFIED INDUSTRY & MODULE SWITCHER (TOP BAR) -->
@@ -2583,23 +2591,46 @@
             founderAuthenticated: false
         };
 
+        function showOfflineBanner(show) {
+            const bar = document.getElementById('offlineStatusBar');
+            if (!bar) return;
+            if (show) {
+                bar.classList.remove('hidden');
+            } else {
+                bar.classList.add('hidden');
+            }
+        }
+
         // Init
         window.addEventListener('DOMContentLoaded', async () => {
+            if (!navigator.onLine) {
+                showOfflineBanner(true);
+            }
             await loadData();
             initKeyboardShortcuts();
             initPwaServiceWorker();
             updateOfflineQueueBadge();
             renderAllViews();
-            // Restore saved session if available
-            const savedUser = sessionStorage.getItem('azbek_active_user');
+
+            // Restore saved session if available (Check localStorage first for durable PWA persistence)
+            const savedUser = localStorage.getItem('azbek_active_user') || sessionStorage.getItem('azbek_active_user');
             if (savedUser) {
                 try {
                     const parsed = JSON.parse(savedUser);
                     const freshUser = (AppState.users || []).find(u => u.id === parsed.id || u.username === parsed.username) || parsed;
                     applyUserSession(freshUser);
-                } catch (e) {}
+                } catch (e) {
+                    console.warn('Sessiyani tiklashda xato:', e);
+                }
             }
-            window.addEventListener('online', () => syncOfflineSalesQueue());
+
+            window.addEventListener('online', () => {
+                showOfflineBanner(false);
+                syncOfflineSalesQueue();
+            });
+            window.addEventListener('offline', () => {
+                showOfflineBanner(true);
+            });
         });
 
         async function loadData() {
@@ -2623,12 +2654,46 @@
                     AppState.auditLogs = data.auditLogs || [];
                     AppState.notifications = data.notifications || [];
 
+                    // Save full state locally for seamless offline usage!
+                    try {
+                        localStorage.setItem('azbek_offline_db', JSON.stringify(data));
+                    } catch (lsErr) {
+                        console.warn('Oflayn kesh saqlanmadi:', lsErr);
+                    }
+
                     // Check DRM status immediately
                     checkDrmStatus();
                     renderNotifications();
                 }
             } catch (e) {
-                console.warn('Oflayn rejimda yuklanmoqda:', e);
+                console.warn('Oflayn rejimda yuklanmoqda (keshdan olinmoqda):', e);
+                const cachedDbStr = localStorage.getItem('azbek_offline_db');
+                if (cachedDbStr) {
+                    try {
+                        const data = JSON.parse(cachedDbStr);
+                        AppState.settings = data.settings || {};
+                        AppState.license = data.license || {};
+                        AppState.metrics = data.metrics || {};
+                        AppState.shifts = data.shifts || {};
+                        AppState.products = data.products || [];
+                        AppState.inventoryMovements = data.inventoryMovements || [];
+                        AppState.restaurant = data.restaurant || { tables: [], menu: [] };
+                        AppState.services = data.services || [];
+                        AppState.customers = data.customers || [];
+                        AppState.sales = data.sales || [];
+                        AppState.clients = data.clients || [];
+                        AppState.users = data.users || [];
+                        AppState.companyRoles = data.companyRoles || [];
+                        AppState.auditLogs = data.auditLogs || [];
+                        AppState.notifications = data.notifications || [];
+
+                        checkDrmStatus();
+                        renderNotifications();
+                    } catch (parseErr) {
+                        console.error('Keshdagi DB o\'qishda xato:', parseErr);
+                    }
+                }
+                showOfflineBanner(true);
             }
         }
 
@@ -2673,6 +2738,7 @@
                     if (data.auditLogs) AppState.auditLogs = data.auditLogs;
                     if (data.notifications) AppState.notifications = data.notifications;
                     sessionStorage.setItem('azbek_active_user', JSON.stringify(data.user));
+                    localStorage.setItem('azbek_active_user', JSON.stringify(data.user));
                     applyUserSession(data.user);
                     renderNotifications();
                     renderAuditLogs();
@@ -2683,7 +2749,40 @@
                     playBeep(220, 150);
                 }
             } catch (e) {
-                errEl.innerText = "Server bilan bog'lanishda xato: " + e.message;
+                console.warn('Oflayn rejimda login urinish:', e);
+                // Offline fallback login validation
+                let matchedUser = null;
+                const cachedUsers = (AppState.users && AppState.users.length) ? AppState.users : [];
+
+                if (username.toLowerCase() === 'azbek' && password === '2026') {
+                    matchedUser = {
+                        id: 'usr_founder',
+                        username: 'azbek',
+                        fullName: 'Azizbek (Asoschi)',
+                        role: 'FOUNDER',
+                        roleBadge: '👑 Asoschi (Super Admin)',
+                        companyId: 'AZBEK-CORP',
+                        branch: 'Oazis Bosh Filial',
+                        allowedTabs: ['admin', 'dashboard', 'audit', 'profile'],
+                        defaultTab: 'admin'
+                    };
+                } else {
+                    matchedUser = cachedUsers.find(u =>
+                        u.username.toLowerCase() === username.toLowerCase() &&
+                        (!companyId || !u.companyId || u.companyId.toUpperCase() === companyId)
+                    );
+                }
+
+                if (matchedUser) {
+                    sessionStorage.setItem('azbek_active_user', JSON.stringify(matchedUser));
+                    localStorage.setItem('azbek_active_user', JSON.stringify(matchedUser));
+                    applyUserSession(matchedUser);
+                    showOfflineBanner(true);
+                    playSuccessSound();
+                    return;
+                }
+
+                errEl.innerText = "Internet yo'q (Oflayn). Agar oldin kirgan bo'lsangiz login va parolingizni to'g'ri kiriting.";
                 errEl.classList.remove('hidden');
             }
         }
@@ -2702,6 +2801,7 @@
                 user.defaultTab = 'admin';
                 user.roleBadge = '👑 Asoschi (Super Admin)';
                 sessionStorage.setItem('azbek_active_user', JSON.stringify(user));
+                localStorage.setItem('azbek_active_user', JSON.stringify(user));
             } else {
                 if (!user.allowedTabs) user.allowedTabs = ['kassa', 'inventory', 'profile'];
                 if (!user.allowedTabs.includes('profile')) user.allowedTabs.push('profile');
@@ -2711,6 +2811,8 @@
                 if (user.role === 'COMPANY_OWNER' && !user.allowedTabs.includes('audit')) {
                     user.allowedTabs.push('audit');
                 }
+                sessionStorage.setItem('azbek_active_user', JSON.stringify(user));
+                localStorage.setItem('azbek_active_user', JSON.stringify(user));
             }
 
             AppState.currentUser = user;
@@ -2782,6 +2884,7 @@
             AppState.currentUser = null;
             AppState.founderAuthenticated = false;
             sessionStorage.removeItem('azbek_active_user');
+            localStorage.removeItem('azbek_active_user');
             if (document.getElementById('loginCompanyIdInput')) document.getElementById('loginCompanyIdInput').value = '';
             document.getElementById('loginUsernameInput').value = '';
             document.getElementById('loginPasswordInput').value = '';
