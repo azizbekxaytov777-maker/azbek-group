@@ -1,10 +1,10 @@
 /**
- * AZBEK GROUP SUPER APP — Offline Service Worker (v5.4 FULL OFFLINE FIRST)
+ * AZBEK GROUP SUPER APP — Offline Service Worker (v5.5 FULL OFFLINE FIRST)
  * Network-First for Navigation & Dynamic Data with Instant Cache Fallback
  * Cache-First for static assets (images, icons, scripts)
  */
 
-const CACHE_NAME = 'azbek-group-v5.4';
+const CACHE_NAME = 'azbek-group-v5.5';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -23,7 +23,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[AZBEK SW v5.4] Keshlanmoqda:', ASSETS_TO_CACHE);
+      console.log('[AZBEK SW v5.5] Keshlanmoqda:', ASSETS_TO_CACHE);
       return cache.addAll(ASSETS_TO_CACHE).catch(err => {
         console.warn('[AZBEK SW] Ba\'zi fayllar keshlanmadi:', err);
       });
