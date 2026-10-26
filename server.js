@@ -1344,6 +1344,19 @@ const server = http.createServer(async (req, res) => {
     // --- REST API ROUTES ---
     if (pathname.startsWith('/api/')) {
         res.setHeader('Content-Type', 'application/json; charset=UTF-8');
+
+        // 0. GET /api/ping or /health -> Ultra-fast 24/7 keep-alive endpoint (no DB load needed)
+        if ((pathname === '/api/ping' || pathname === '/health') && req.method === 'GET') {
+            res.writeHead(200);
+            return res.end(JSON.stringify({ 
+                status: 'ok', 
+                app: 'AZBEK GROUP CLOUD', 
+                version: '6.1', 
+                uptimeSec: Math.floor(process.uptime()), 
+                timestamp: new Date().toISOString() 
+            }));
+        }
+
         const db = loadDB();
 
         // 1. GET /api/data -> Full synchronized state (Protected against credential leakage)

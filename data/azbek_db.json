@@ -669,7 +669,8 @@
       "action": "TIZIM_ISHGA_TUSHIRILDI",
       "module": "Tizim",
       "details": "AZBEK GROUP rasmiy ish rejimiga o'tkazildi. Flagman filial: Oazis Universal (STR-001)",
-      "ipAddress": "127.0.0.1"
+      "ipAddress": "127.0.0.1",
+      "companyId": "STR-001"
     },
     {
       "id": 2,
@@ -679,7 +680,8 @@
       "action": "LITSENZIYA_FAOL",
       "module": "Litsenziya DRM",
       "details": "STR-001 uchun 700 000 UZS/oy litsenziya 2027-yilgacha faol holatda",
-      "ipAddress": "127.0.0.1"
+      "ipAddress": "127.0.0.1",
+      "companyId": "STR-001"
     }
   ],
   "notifications": [

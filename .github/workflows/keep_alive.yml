@@ -1,0 +1,15 @@
+name: Render Keep-Alive 24/7
+
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render Free tier from sleeping
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping AZBEK GROUP Render Cloud
+        run: |
+          curl -s --max-time 15 "https://azbek-group.onrender.com/api/ping" || echo "Ping attempt completed"
