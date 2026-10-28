@@ -75,7 +75,10 @@
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                .then(reg => console.log('✅ [AZBEK PWA] SW faol!', reg.scope))
+                .then(reg => {
+                    console.log('✅ [AZBEK PWA] SW faol!', reg.scope);
+                    reg.update();
+                })
                 .catch(err => console.warn('⚠️ [AZBEK PWA] SW xatolik:', err));
         }
     </script>
